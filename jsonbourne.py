@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-"""`jsonbourne` finds the best python-json-lib for the job"""
+"""`jsonbourne` finds the best python-json-lib for the job
+
+Dynamic Graphics Python
+"""
 
 __version__ = "0.1.0"
 
@@ -10,8 +13,7 @@ def import_json(jsons=JSONS):
     """Import the best possible given a priority list"""
     for mod in jsons:
         try:
-            res = __import__(mod)
-            return res
+            return __import__(mod)
         except ImportError:
             pass
     import json as _json
