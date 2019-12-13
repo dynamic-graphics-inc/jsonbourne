@@ -4,9 +4,10 @@
 Dynamic Graphics Python
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 JSONS = ("rapidjson", "orjson", "ujson", "simplejson")
+JSONLIB = None
 
 
 def import_json(jsons=JSONS):
@@ -22,3 +23,4 @@ def import_json(jsons=JSONS):
 
 
 json = import_json()
+JSONLIB = json.__name__

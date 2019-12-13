@@ -31,8 +31,8 @@ the python stdlib json.
 ## Custom lib preferences
 
 ```python
-from jsonbourne import import_json
-json = import_json(("ujson", "rapidjson"))  # prefer ujson then rapidjson
+from jsonbourne import _import_json
+json = _import_json(("ujson", "rapidjson"))  # prefer ujson then rapidjson
 string = json.dumps({"a":1, "b":2, "c":3})  # '{"a": 1, "b": 2, "c": 3}'
 ```
 
