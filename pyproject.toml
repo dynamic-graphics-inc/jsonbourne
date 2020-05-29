@@ -2,10 +2,14 @@
 name = "jsonbourne"
 version = "0.1.1"
 description = "Import the best JSON lib"
+license = "MIT"
 authors = ["jesse <jesse@dgi.com>"]
+packages = [
+    { include = "jsonbourne", from = "." }
+]
 
 [tool.poetry.dependencies]
-python = "^3.5"
+python = "^3.6.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.3"
