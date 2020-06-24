@@ -85,10 +85,10 @@ def flake(session):
     session.run("flake8", JSONBOURNE_PKG_DIRPATH)
 
 
-@nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
-def flake_tests(session):
-    session.install("flake8")
-    session.run("flake8", TESTS_DIRPATH)
+# @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
+# def flake_tests(session):
+#     session.install("flake8")
+#     session.run("flake8", TESTS_DIRPATH)
 
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
