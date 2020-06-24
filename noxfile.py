@@ -105,7 +105,7 @@ def base_test(session):
 
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
-def pydantic_tests(session):
+def pydantic_test(session):
     session.install("pytest")
     session.install("pydantic")
     session.run(
@@ -119,7 +119,7 @@ def pydantic_tests(session):
 
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
-def attrs_tests(session):
+def attrs_test(session):
     session.install("pytest")
     session.install("attrs")
     session.run(
@@ -133,21 +133,7 @@ def attrs_tests(session):
 
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
-def orjson_tests(session):
-    session.install("pytest")
-    session.install("orjson")
-    session.run(
-        "pytest",
-        "-m",
-        "orjson or basic",
-        "--doctest-modules",
-        TESTS_DIRPATH,
-        JSONBOURNE_PKG_DIRPATH,
-    )
-
-
-@nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
-def ujson_tests(session):
+def ujson_test(session):
     session.install("pytest")
     session.install("ujson")
     session.run(
@@ -161,7 +147,7 @@ def ujson_tests(session):
 
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
-def rapidjson_tests(session):
+def rapidjson_test(session):
     session.install("pytest")
     session.install("python-rapidjson")
     session.run(
@@ -172,3 +158,18 @@ def rapidjson_tests(session):
         TESTS_DIRPATH,
         JSONBOURNE_PKG_DIRPATH,
     )
+
+
+### TODO: add orjson (maybe)
+# @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
+# def orjson_test(session):
+#     session.install("pytest")
+#     session.install("orjson")
+#     session.run(
+#         "pytest",
+#         "-m",
+#         "orjson or basic",
+#         "--doctest-modules",
+#         TESTS_DIRPATH,
+#         JSONBOURNE_PKG_DIRPATH,
+#         )

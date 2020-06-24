@@ -4,7 +4,6 @@ import pytest
 
 from jsonbourne import JsonDict
 
-
 pytestmark = [pytest.mark.attrs, pytest.mark.optdeps]
 
 try:

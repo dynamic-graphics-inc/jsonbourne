@@ -4,7 +4,6 @@ import pytest
 
 from jsonbourne import import_json
 
-
 pytestmark = [pytest.mark.rapidjson, pytest.mark.optdeps]
 
 

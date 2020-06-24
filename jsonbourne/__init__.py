@@ -4,8 +4,9 @@
 Dynamic Graphics Python
 """
 
-from jsonbourne._json import JSON, JsonObj, JsonDict
-
+from jsonbourne.main import JSON
+from jsonbourne.main import JsonDict
+from jsonbourne.main import JsonObj
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 1

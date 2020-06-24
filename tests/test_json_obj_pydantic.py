@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
+
 import pytest
 
 from jsonbourne import JsonDict
-
 
 pytestmark = [pytest.mark.pydantic, pytest.mark.optdeps]
 

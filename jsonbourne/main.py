@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Json Bourne -- EZ-PZ-JSON with lots o goodies"""
 import keyword
-
 import sys
 from datetime import datetime
 from datetime import timedelta
@@ -18,20 +17,18 @@ from typing import List
 from typing import Set
 from typing import Tuple
 
-
-__version__ = "0.1.1"
-
 if sys.version_info < (3, 7):
     from collections.abc import MutableMapping
 
-    _JsonDictMutableMapping = MutableMapping
+    _JsonObjMutableMapping = MutableMapping
 else:
     from typing import MutableMapping
 
-    _JsonDictMutableMapping = MutableMapping[str, Any]
+    _JsonObjMutableMapping = MutableMapping[str, Any]
 
 __all__ = [
-    "JsonDict",
+    "JsonObj",
+    "JsonObj",
     "JSONDecodeError",
     "JSONEncoder",
     "loads",
@@ -84,19 +81,11 @@ _json, JSONDecodeError, JSONEncoder = _import_json()
 
 load = _json.load
 loads = _json.loads
-# try:
-#     JSONDecodeError = _json.JSONDecodeError
-# except AttributeError:
-#     JSONDecodeError = TypeError  # ujson throws a type error
-# try:
-#     JSONEncoder = _json.JSONEncoder
-# except AttributeError:
-#     JSONEncoder = _json.Encoder  # type: ignore
 
 
 def _validate(data: Any) -> Any:
     """Validate/convert data for JSON serialization"""
-    if isinstance(data, JsonDict):
+    if isinstance(data, JsonObj):
         data = data.eject()
     if isinstance(data, dict) and any(isinstance(val, bytes) for val in data.values()):
         return {k: str(v, encoding="utf-8") for k, v in data.items()}
@@ -104,7 +93,7 @@ def _validate(data: Any) -> Any:
 
 
 def _json_encode(obj: Any) -> Any:
-    if isinstance(obj, JsonDict):
+    if isinstance(obj, JsonObj):
         return obj.eject()
     if isinstance(obj, Path):
         return str(obj)
@@ -229,24 +218,24 @@ def is_identifier(string: str) -> bool:
     return True
 
 
-class JsonDict(_JsonDictMutableMapping):
+class JsonObj(_JsonObjMutableMapping):
     """JSON friendly python dictionary with dot notation and string only keys
 
-    JsonDict(foo='bar')['foo'] == JsonDict(foo='bar').foo
+    JsonObj(foo='bar')['foo'] == JsonObj(foo='bar').foo
 
     Examples:
         >>> d = {"uno": 1, "dos": 2, "tres": 3}
         >>> d
         {'uno': 1, 'dos': 2, 'tres': 3}
-        >>> d = JsonDict(d)
+        >>> d = JsonObj(d)
         >>> d
-        JsonDict(**{'uno': 1, 'dos': 2, 'tres': 3})
+        JsonObj(**{'uno': 1, 'dos': 2, 'tres': 3})
         >>> list(d.keys())
         ['uno', 'dos', 'tres']
         >>> list(d.dot_keys())
         ['uno', 'dos', 'tres']
         >>> d
-        JsonDict(**{'uno': 1, 'dos': 2, 'tres': 3})
+        JsonObj(**{'uno': 1, 'dos': 2, 'tres': 3})
         >>> d['uno']
         1
         >>> d.uno
@@ -255,7 +244,7 @@ class JsonDict(_JsonDictMutableMapping):
         True
         >>> d.uno = "ONE"
         >>> d
-        JsonDict(**{'uno': 'ONE', 'dos': 2, 'tres': 3})
+        JsonObj(**{'uno': 'ONE', 'dos': 2, 'tres': 3})
         >>> d['uno'] == d.uno
         True
         >>> 'uno' in d
@@ -263,34 +252,34 @@ class JsonDict(_JsonDictMutableMapping):
         >>> 'not_in_d' in d
         False
         >>> d
-        JsonDict(**{'uno': 'ONE', 'dos': 2, 'tres': 3})
+        JsonObj(**{'uno': 'ONE', 'dos': 2, 'tres': 3})
         >>> del d['dos']
         >>> d
-        JsonDict(**{'uno': 'ONE', 'tres': 3})
+        JsonObj(**{'uno': 'ONE', 'tres': 3})
         >>> del d.tres
         >>> d
-        JsonDict(**{'uno': 'ONE'})
+        JsonObj(**{'uno': 'ONE'})
         >>> d = {"uno": 1, "dos": 2, "tres": {"a": 1, "b": [3, 4, 5, 6]}}
-        >>> d = JsonDict(d)
+        >>> d = JsonObj(d)
         >>> d
-        JsonDict(**{'uno': 1, 'dos': 2, 'tres': {'a': 1, 'b': [3, 4, 5, 6]}})
+        JsonObj(**{'uno': 1, 'dos': 2, 'tres': {'a': 1, 'b': [3, 4, 5, 6]}})
         >>> d.tres
-        JsonDict(**{'a': 1, 'b': [3, 4, 5, 6]})
+        JsonObj(**{'a': 1, 'b': [3, 4, 5, 6]})
         >>> d.tres.a
         1
         >>> d.tres.a = "new-val"
         >>> d.tres.a
         'new-val'
         >>> d
-        JsonDict(**{'uno': 1, 'dos': 2, 'tres': {'a': 'new-val', 'b': [3, 4, 5, 6]}})
-        >>> jd = JsonDict({"a":1, "b": 'herm', 'alist':[{'sub': 123}]})
+        JsonObj(**{'uno': 1, 'dos': 2, 'tres': {'a': 'new-val', 'b': [3, 4, 5, 6]}})
+        >>> jd = JsonObj({"a":1, "b": 'herm', 'alist':[{'sub': 123}]})
 
         It does lists!? oh my
 
         >>> jd
-        JsonDict(**{'a': 1, 'b': 'herm', 'alist': [{'sub': 123}]})
+        JsonObj(**{'a': 1, 'b': 'herm', 'alist': [{'sub': 123}]})
         >>> jd.alist[0]
-        JsonDict(**{'sub': 123})
+        JsonObj(**{'sub': 123})
         >>> jd.eject()
         {'a': 1, 'b': 'herm', 'alist': [{'sub': 123}]}
 
@@ -304,31 +293,31 @@ class JsonDict(_JsonDictMutableMapping):
         except AssertionError:
             d = {k: v for k, v in self.__dict__.items() if not isinstance(k, str)}
             raise ValueError(
-                "JsonDict keys MUST be strings! Bad key values: {}".format(str(d))
+                "JsonObj keys MUST be strings! Bad key values: {}".format(str(d))
             )
         self.recurse()
 
     def recurse(self) -> None:
-        """Recusively convert all sub dictionaries to JsonDict objects"""
+        """Recusively convert all sub dictionaries to JsonObj objects"""
         self.__dict__.update({k: jsonify(v) for k, v in self.__dict__.items()})
 
     def __attrs_post_init__(self) -> None:
         self.recurse()
 
     def __contains__(self, key: str) -> bool:  # type: ignore
-        """Check if a key or dot-key is contained within the JsonDict object
+        """Check if a key or dot-key is contained within the JsonObj object
 
         Args:
             key (str): root level key or a dot-key
 
         Returns:
-            bool: True if the key/dot-key is in the JsonDict; False otherwise
+            bool: True if the key/dot-key is in the JsonObj; False otherwise
 
         Examples:
             >>> d = {"uno": 1, "dos": 2, "tres": 3, "sub": {"a": 1, "b": 2, "c": [3, 4, 5, 6], "d": "a_string"}}
-            >>> d = JsonDict(d)
+            >>> d = JsonObj(d)
             >>> d
-            JsonDict(**{'uno': 1, 'dos': 2, 'tres': 3, 'sub': {'a': 1, 'b': 2, 'c': [3, 4, 5, 6], 'd': 'a_string'}})
+            JsonObj(**{'uno': 1, 'dos': 2, 'tres': 3, 'sub': {'a': 1, 'b': 2, 'c': [3, 4, 5, 6], 'd': 'a_string'}})
             >>> 'uno' in d
             True
             >>> 'this_key_is_not_in_d' in d
@@ -346,7 +335,7 @@ class JsonDict(_JsonDictMutableMapping):
         return key in self.__dict__
 
     def __setitem__(self, key: str, value: Any) -> None:
-        """Set JsonDict item with 'key' to 'value'
+        """Set JsonObj item with 'key' to 'value'
 
         Args:
             key (str): Key/item to set
@@ -359,11 +348,11 @@ class JsonDict(_JsonDictMutableMapping):
             ValueError: If given a key that is not a valid python keyword/identifier
 
         Examples:
-            >>> d = JsonDict()
+            >>> d = JsonObj()
             >>> d.a = 123
             >>> d['b'] = 321
             >>> d
-            JsonDict(**{'a': 123, 'b': 321})
+            JsonObj(**{'a': 123, 'b': 321})
             >>> d[123] = 'a'
             Traceback (most recent call last):
             ...
@@ -420,21 +409,25 @@ class JsonDict(_JsonDictMutableMapping):
         return len(self.__dict__)
 
     def items(self) -> ItemsView[str, Any]:
-        """Return an items view of the JsonDict object"""
+        """Return an items view of the JsonObj object"""
         return self.__dict__.items()
 
+    def entries(self) -> ItemsView[str, Any]:
+        """Alias for items"""
+        return self.items()
+
     def keys(self) -> KeysView[str]:
-        """Return the keys view of the JsonDict object"""
+        """Return the keys view of the JsonObj object"""
         return self.__dict__.keys()
 
-    def filter_none(self, recursive: bool = False) -> "JsonDict":
+    def filter_none(self, recursive: bool = False) -> "JsonObj":
         """Filter key-values where the value is `None` but not false-y
 
         Args:
             recursive (bool): Recursively filter out None values
 
         Returns:
-            JsonDict that has been filtered of None values
+            JsonObj that has been filtered of None values
 
         Examples:
             >>> d = {
@@ -454,9 +447,9 @@ class JsonDict(_JsonDictMutableMapping):
             ...     },
             ...     }
             ...
-            >>> d = JsonDict(d)
+            >>> d = JsonObj(d)
             >>> print(d)
-            JsonDict(**{
+            JsonObj(**{
                 'a': None,
                 'b': 2,
                 'c': {'d': 'herm',
@@ -471,7 +464,7 @@ class JsonDict(_JsonDictMutableMapping):
                 'is_false': False
             })
             >>> print(d.filter_none())
-            JsonDict(**{
+            JsonObj(**{
                 'b': 2,
                 'c': {'d': 'herm',
                       'e': None,
@@ -486,7 +479,7 @@ class JsonDict(_JsonDictMutableMapping):
             })
             >>> from pprint import pprint
             >>> print(d.filter_none(recursive=True))
-            JsonDict(**{
+            JsonObj(**{
                 'b': 2,
                 'c': {'d': 'herm',
                       'falsey_dict': {},
@@ -501,25 +494,25 @@ class JsonDict(_JsonDictMutableMapping):
 
         """
         if recursive:
-            return JsonDict(
+            return JsonObj(
                 {
                     k: v
-                    if not isinstance(v, (dict, JsonDict))
-                    else JsonDict(v).filter_none(recursive=True)
+                    if not isinstance(v, (dict, JsonObj))
+                    else JsonObj(v).filter_none(recursive=True)
                     for k, v in self.items()
                     if v is not None
                 }
             )
-        return JsonDict({k: v for k, v in self.items() if v is not None})
+        return JsonObj({k: v for k, v in self.items() if v is not None})
 
-    def filter_false(self, recursive: bool = False) -> "JsonDict":
+    def filter_false(self, recursive: bool = False) -> "JsonObj":
         """Filter key-values where the value is false-y
 
         Args:
-            recursive (bool): Recurse into sub JsonDicts and dictionaries
+            recursive (bool): Recurse into sub JsonObjs and dictionaries
 
         Returns:
-            JsonDict that has been filtered
+            JsonObj that has been filtered
 
         Examples:
             >>> d = {
@@ -539,9 +532,9 @@ class JsonDict(_JsonDictMutableMapping):
             ...     },
             ...     }
             ...
-            >>> d = JsonDict(d)
+            >>> d = JsonObj(d)
             >>> print(d)
-            JsonDict(**{
+            JsonObj(**{
                 'a': None,
                 'b': 2,
                 'c': {'d': 'herm',
@@ -556,7 +549,7 @@ class JsonDict(_JsonDictMutableMapping):
                 'is_false': False
             })
             >>> print(d.filter_false())
-            JsonDict(**{
+            JsonObj(**{
                 'b': 2,
                 'c': {'d': 'herm',
                       'e': None,
@@ -566,25 +559,25 @@ class JsonDict(_JsonDictMutableMapping):
                       'is_false': False}
             })
             >>> print(d.filter_false(recursive=True))
-            JsonDict(**{
+            JsonObj(**{
                 'b': 2, 'c': {'d': 'herm'}
             })
 
         """
         if recursive:
-            return JsonDict(
+            return JsonObj(
                 {
                     k: v
-                    if not isinstance(v, (dict, JsonDict))
-                    else JsonDict(v).filter_false(recursive=True)
+                    if not isinstance(v, (dict, JsonObj))
+                    else JsonObj(v).filter_false(recursive=True)
                     for k, v in self.items()
                     if v
                 }
             )
-        return JsonDict({k: v for k, v in self.items() if v})
+        return JsonObj({k: v for k, v in self.items() if v})
 
     def dot_keys(self) -> Iterable[str]:
-        """Yield the JsonDict's dot-notation keys
+        """Yield the JsonObj's dot-notation keys
 
         Returns:
             Iterable[str]: List of the dot-notation friendly keys
@@ -597,7 +590,7 @@ class JsonDict(_JsonDictMutableMapping):
 
         for k, value in self.items():
             value = jsonify(value)
-            if isinstance(value, JsonDict):
+            if isinstance(value, JsonObj):
                 yield from (f"{k}.{dk}" for dk in value.dot_keys())
             else:
                 yield k
@@ -606,14 +599,14 @@ class JsonDict(_JsonDictMutableMapping):
         return chain(  # type: ignore
             *(
                 (str(k),)
-                if not isinstance(v, JsonDict)
+                if not isinstance(v, JsonObj)
                 else (*(f"{k}.{dk}" for dk in jsonify(v).dot_keys()),)
                 for k, v in self.items()
             )
         )
 
     def dot_keys_list(self, sort_keys: bool = False) -> List[str]:
-        """Return a list of the JsonDict's dot-notation friendly keys
+        """Return a list of the JsonObj's dot-notation friendly keys
 
         Args:
             sort_keys (bool): Flag to have the dot-keys be returned sorted
@@ -627,7 +620,7 @@ class JsonDict(_JsonDictMutableMapping):
         return list(self.dot_keys())
 
     def dot_keys_set(self) -> Set[str]:
-        """Return a set of the JsonDict's dot-notation friendly keys
+        """Return a set of the JsonObj's dot-notation friendly keys
 
         Returns:
             Set[str]: List of the dot-notation friendly keys
@@ -636,7 +629,7 @@ class JsonDict(_JsonDictMutableMapping):
         return set(self.dot_keys())
 
     def dot_lookup(self, dot_key: str) -> Any:
-        """Look up JsonDict keys using dot notation as a string
+        """Look up JsonObj keys using dot notation as a string
 
         Args:
             dot_key (str): dot-notation key to look up ('key1.key2.third_key')
@@ -666,7 +659,7 @@ class JsonDict(_JsonDictMutableMapping):
         return ((dk, self.dot_lookup(dk)) for dk in self.dot_keys())
 
     def to_str(self, minify: bool = False, width: int = 88) -> str:
-        """Return a string representation of the JsonDict object"""
+        """Return a string representation of the JsonObj object"""
         if minify:
             return type(self).__name__ + "(**" + str(self.to_dict()) + ")"
         return "".join(
@@ -683,11 +676,11 @@ class JsonDict(_JsonDictMutableMapping):
         return self.to_str(minify=True)
 
     def __str__(self) -> str:
-        """Return the string representation of the JsonDict object"""
+        """Return the string representation of the JsonObj object"""
         return self.to_str(minify=False)
 
     def _repr_html_(self) -> str:
-        """Return the HTML representation of the JsonDict object"""
+        """Return the HTML representation of the JsonObj object"""
         return "<pre>{}</pre>".format(self.__str__())
 
     @classmethod
@@ -722,9 +715,9 @@ class JsonDict(_JsonDictMutableMapping):
         """Eject to python-builtin dictionary object
 
         Examples:
-            >>> d = JsonDict(**{'uno': 'ONE', 'tres': 3, 'dos': 2})
+            >>> d = JsonObj(**{'uno': 'ONE', 'tres': 3, 'dos': 2})
             >>> d
-            JsonDict(**{'uno': 'ONE', 'tres': 3, 'dos': 2})
+            JsonObj(**{'uno': 'ONE', 'tres': 3, 'dos': 2})
             >>> plain_ol_dict = d.eject()
             >>> plain_ol_dict
             {'uno': 'ONE', 'tres': 3, 'dos': 2}
@@ -734,32 +727,32 @@ class JsonDict(_JsonDictMutableMapping):
         """
         return {
             k: unjsonify(v)
-            # if not isinstance(v, JsonDict) else v.eject()
+            # if not isinstance(v, JsonObj) else v.eject()
             for k, v in self.__dict__.items()
         }
 
     def to_dict(self) -> Dict[str, Any]:
-        """Return the JsonDict object (and children) as a python dictionary"""
+        """Return the JsonObj object (and children) as a python dictionary"""
         return self.eject()
 
-    def _to_dict(self) -> Dict[str, Any]:
-        """Return the JsonDict object (and children) as a python dictionary"""
+    def asdict(self) -> Dict[str, Any]:
+        """Return the JsonObj object (and children) as a python dictionary"""
         return self.eject()
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "JsonDict":
-        """Return a JsonDict object from a dictionary of data"""
+    def from_dict(cls, data: Dict[str, Any]) -> "JsonObj":
+        """Return a JsonObj object from a dictionary of data"""
         return cls(**data)
 
     @classmethod
-    def from_json(cls, json_string: str) -> "JsonDict":
-        """Return a JsonDict object from a json string
+    def from_json(cls, json_string: str) -> "JsonObj":
+        """Return a JsonObj object from a json string
 
         Args:
-            json_string (str): JSON string to convert to a JsonDict
+            json_string (str): JSON string to convert to a JsonObj
 
         Returns:
-            JsonDict: JsonDict object for the given JSON string
+            JsonObj: JsonObj object for the given JSON string
 
         """
         raise NotImplementedError
@@ -767,7 +760,7 @@ class JsonDict(_JsonDictMutableMapping):
     def to_json(
         self, minify: bool = False, sort_keys: bool = False, indent: int = 4, **kwargs
     ) -> str:
-        """Return a JSON string of the JsonDict object
+        """Return a JSON string of the JsonObj object
 
         Args:
             minify (bool): Return a 'minified' version of the JSON string
@@ -776,7 +769,7 @@ class JsonDict(_JsonDictMutableMapping):
             **kwargs: Keyword args to be passed on to the JSON dumps method
 
         Returns:
-            str: JSON string of the JsonDict object
+            str: JSON string of the JsonObj object
 
         """
         raise NotImplementedError
@@ -784,7 +777,7 @@ class JsonDict(_JsonDictMutableMapping):
     def stringify(
         self, minify: bool = False, sort_keys: bool = False, indent: int = 4, **kwargs
     ) -> str:
-        """Return a JSON string of the JsonDict; `JsonDict.to_json` alias
+        """Return a JSON string of the JsonObj; `JsonObj.to_json` alias
 
         Args:
             minify (bool): Return a 'minified' version of the JSON string
@@ -793,21 +786,21 @@ class JsonDict(_JsonDictMutableMapping):
             **kwargs: Keyword args to be passed on to the JSON dumps method
 
         Returns:
-            str: JSON string of the JsonDict object
+            str: JSON string of the JsonObj object
 
         """
 
         return self.to_json(minify=minify, sort_keys=sort_keys, indent=indent, **kwargs)
 
     @classmethod
-    def _from_json(cls, json_string: str) -> "JsonDict":
-        """Return a JsonDict object from a json string
+    def _from_json(cls, json_string: str) -> "JsonObj":
+        """Return a JsonObj object from a json string
 
         Args:
-            json_string (str): JSON string to convert to a JsonDict
+            json_string (str): JSON string to convert to a JsonObj
 
         Returns:
-            JsonDict: JsonDict object for the given JSON string
+            JsonObj: JsonObj object for the given JSON string
 
         """
         return cls.from_dict(_json.loads(json_string))
@@ -815,7 +808,7 @@ class JsonDict(_JsonDictMutableMapping):
     def _to_json(
         self, minify: bool = False, sort_keys: bool = False, indent: int = 4, **kwargs
     ) -> str:
-        """Return a JSON string of the JsonDict object
+        """Return a JSON string of the JsonObj object
 
         Args:
             minify (bool): Return a 'minified' version of the JSON string
@@ -824,7 +817,7 @@ class JsonDict(_JsonDictMutableMapping):
             **kwargs: Keyword args to be passed on to the JSON dumps method
 
         Returns:
-            str: JSON string of the JsonDict object
+            str: JSON string of the JsonObj object
 
         """
         return dumps(
@@ -832,23 +825,26 @@ class JsonDict(_JsonDictMutableMapping):
         )
 
     @classmethod
-    def validate_type(cls, val: Any) -> "JsonDict":
-        """Validate and convert a value to a JsonDict object"""
-        return JsonDict(val)
+    def validate_type(cls, val: Any) -> "JsonObj":
+        """Validate and convert a value to a JsonObj object"""
+        return JsonObj(val)
 
     @classmethod
     def __get_validators__(cls):
-        """Return the JsonDict validator functions"""
+        """Return the JsonObj validator functions"""
         yield cls.validate_type
 
 
-JsonObj = JsonDict
+class JsonDict(JsonObj):
+    """Alias for JsonObj"""
+
+    pass
 
 
 def jsonify(value: Any) -> Any:
-    """Convert and return a value to a JsonDict if the value is a dict"""
-    if isinstance(value, dict) and not isinstance(value, JsonDict):
-        return JsonDict(value)
+    """Convert and return a value to a JsonObj if the value is a dict"""
+    if isinstance(value, dict) and not isinstance(value, JsonObj):
+        return JsonObj(value)
     if isinstance(value, list):
         return [jsonify(el) for el in value]
     if isinstance(value, tuple):
@@ -858,7 +854,7 @@ def jsonify(value: Any) -> Any:
 
 def unjsonify(value: Any) -> Any:
     """Recursively eject a JsonDit object"""
-    if isinstance(value, JsonDict):
+    if isinstance(value, JsonObj):
         return {k: unjsonify(v) for k, v in value.__dict__.items()}
     if isinstance(value, list):
         return [unjsonify(el) for el in value]
@@ -867,9 +863,16 @@ def unjsonify(value: Any) -> Any:
     return value
 
 
-class JSON:
-    def __call__(self, value: Any):
+class JSONMeta(type):
+    """Meta type for use by JSON class to allow for static `__call__` method"""
+
+    @staticmethod
+    def __call__(value: Any):
         return jsonify(value)
+
+
+class JSON(metaclass=JSONMeta):
+    """JSON class meant to mimic the js/ts-JSON"""
 
     @staticmethod
     def stringify(data, indent=None, sort_keys=False):

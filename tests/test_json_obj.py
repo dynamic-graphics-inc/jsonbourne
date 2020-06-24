@@ -9,10 +9,10 @@
 """Python builtin data structure utils"""
 
 from decimal import Decimal
+
 import pytest
 
 from jsonbourne import JsonDict
-
 
 pytestmark = [pytest.mark.basic]
 
