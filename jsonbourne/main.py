@@ -20,17 +20,18 @@ from typing import Tuple
 if sys.version_info < (3, 7):
     from collections.abc import MutableMapping
 
-    _JsonObjMutableMapping = MutableMapping
+    JsonObjMutableMapping = MutableMapping
 else:
     from typing import MutableMapping
 
-    _JsonObjMutableMapping = MutableMapping[str, Any]
+    JsonObjMutableMapping = MutableMapping[str, Any]
 
 __all__ = [
     "JsonObj",
     "JsonObj",
     "JSONDecodeError",
     "JSONEncoder",
+    "JsonObjMutableMapping",
     "loads",
     "dumps",
     "dump",
@@ -116,7 +117,7 @@ def dump(
     indent: int = 4,
     default=None,
     **kwargs,
-):
+) -> None:
     """JSON dump with minify kwarg added"""
     return _json.dump(
         _validate(data),
@@ -131,7 +132,7 @@ def dump(
 
 def dumpf(
     data: Any, fp, sort_keys: bool = False, indent: int = 2, default=None, **kwargs
-):
+) -> None:
     """JSON dump with minify kwarg added"""
     return _json.dump(
         _validate(data),
@@ -218,7 +219,7 @@ def is_identifier(string: str) -> bool:
     return True
 
 
-class JsonObj(_JsonObjMutableMapping):
+class JsonObj(JsonObjMutableMapping):
     """JSON friendly python dictionary with dot notation and string only keys
 
     JsonObj(foo='bar')['foo'] == JsonObj(foo='bar').foo
@@ -867,7 +868,7 @@ class JSONMeta(type):
     """Meta type for use by JSON class to allow for static `__call__` method"""
 
     @staticmethod
-    def __call__(value: Any):
+    def __call__(value: Any):  # type: ignore
         return jsonify(value)
 
 
@@ -889,7 +890,7 @@ class JSON(metaclass=JSONMeta):
     @staticmethod
     def parse(string: str, obj=True):
         if obj:
-            return JSON(_json.loads(string))
+            return jsonify(_json.loads(string))
         return _json.loads(string)
 
 

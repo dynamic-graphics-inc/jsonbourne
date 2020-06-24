@@ -116,3 +116,4 @@ node_modules/
 .venv/
 .venv_win/
 .nox/
+mypy_reports/

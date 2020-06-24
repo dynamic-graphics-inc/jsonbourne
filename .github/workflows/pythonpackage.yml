@@ -24,7 +24,7 @@ jobs:
           nox -s flake
 
   build:
-
+    needs: [lint]
     runs-on: ubuntu-latest
     strategy:
       matrix:
