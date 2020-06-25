@@ -3,7 +3,7 @@ import sys
 
 import pytest
 
-from jsonbourne import JsonDict
+from jsonbourne import JsonObj
 
 pytestmark = [pytest.mark.pydantic, pytest.mark.optdeps]
 
@@ -12,7 +12,7 @@ try:
 
     from pydantic import BaseModel
 
-    class PydanticJsonDict(BaseModel, JsonDict):
+    class PydanticJsonDict(BaseModel, JsonObj):
         a: int
         b: int
         c: str

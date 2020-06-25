@@ -2,7 +2,7 @@
 
 import pytest
 
-from jsonbourne import JsonDict
+from jsonbourne import JsonObj
 
 pytestmark = [pytest.mark.attrs, pytest.mark.optdeps]
 
@@ -16,7 +16,7 @@ except:
 
 def test_dictainer_property_attrs() -> None:
     @attrs(auto_attribs=True)
-    class ThingyWithPropertyAndAttrs(JsonDict):
+    class ThingyWithPropertyAndAttrs(JsonObj):
         a: int
         b: int
         c: str
@@ -76,7 +76,7 @@ EXPECTED_STRING = """ThingyWithPropertyAndAttrsStrTests(**{
 
 def test_dictainer_property_attrs_str() -> None:
     @attrs(auto_attribs=True)
-    class ThingyWithPropertyAndAttrsStrTests(JsonDict):
+    class ThingyWithPropertyAndAttrsStrTests(JsonObj):
         a: int
         b: int
         c: str
