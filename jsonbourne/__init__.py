@@ -9,6 +9,8 @@ from jsonbourne.main import JsonDict
 from jsonbourne.main import JsonObj
 from jsonbourne.main import JsonObjMutableMapping
 from jsonbourne.main import _json as json
+from jsonbourne.main import import_json
+
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 1
@@ -29,4 +31,5 @@ __all__ = [
     "JSON",
     "json",
     "JsonObjMutableMapping",
-]
+    "import_json"
+    ]
