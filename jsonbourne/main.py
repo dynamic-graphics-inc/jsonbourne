@@ -38,6 +38,7 @@ __all__ = [
     "stringify",
     "jsonify",
     "JSON",
+    "import_json",
 ]
 
 
@@ -62,7 +63,7 @@ def _import_json_stdlib():
     return json, json.JSONDecodeError, json.JSONEncoder
 
 
-def _import_json(jsonlibs=["rapidjson", "ujson"]) -> Any:
+def import_json(jsonlibs=["rapidjson", "ujson"]) -> Any:
     lib2funk = {
         "rapidjson": _import_rapidjson,
         "ujson": _import_ujson,
@@ -78,7 +79,7 @@ def _import_json(jsonlibs=["rapidjson", "ujson"]) -> Any:
     return _import_json_stdlib()
 
 
-_json, JSONDecodeError, JSONEncoder = _import_json()
+_json, JSONDecodeError, JSONEncoder = import_json()
 
 load = _json.load
 loads = _json.loads
