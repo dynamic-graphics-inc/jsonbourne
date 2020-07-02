@@ -12,12 +12,12 @@ from decimal import Decimal
 
 import pytest
 
-from jsonbourne import JsonDict
+from jsonbourne import JsonObj
 
 pytestmark = [pytest.mark.basic]
 
 
-class Thingy(JsonDict):
+class Thingy(JsonObj):
     @property
     def herm(self):
         return "hermproperty"
@@ -46,7 +46,7 @@ def test_dictainer_basic_unpacking() -> None:
 
     merged = {**thing, **thing2}
     assert merged["a"] == 234
-    merged_dictainer = JsonDict({**thing, **thing2})
+    merged_dictainer = JsonObj({**thing, **thing2})
     assert {**merged_dictainer} == merged
 
 
@@ -57,7 +57,7 @@ def test_dictainer_breaks() -> None:
         thing2["herm herm herm import"] = "should break"
 
 
-class ThingyWithMethod(JsonDict):
+class ThingyWithMethod(JsonObj):
     def a_property(self) -> str:
         return "prop_value"
 
@@ -80,7 +80,7 @@ def test_dictainer_method_set_attr() -> None:
     assert hasattr(thing_w_prop, "some_attr")
 
 
-class ThingyWithProperty(JsonDict):
+class ThingyWithProperty(JsonObj):
     @property
     def a_property(self) -> str:
         return "prop_value"
@@ -142,27 +142,27 @@ d2 = {
 
 
 def test_dotlookup() -> None:
-    d = JsonDict(d1)
+    d = JsonObj(d1)
     dot_get = d.subd.a
     dot_lookup = d["subd.a"]
     assert dot_lookup == dot_get
 
 
 def test_dotlookup_no_dots() -> None:
-    d = JsonDict(d1)
+    d = JsonObj(d1)
     dot_get = d.n
     dot_lookup = d.dot_lookup("n")
     assert dot_lookup == dot_get
 
 
 def test_dotlookup_dont_exist() -> None:
-    d = JsonDict(d1)
+    d = JsonObj(d1)
     with pytest.raises(KeyError):
         dot_lookup = d["subd.a.hermhermherm.ohno"]
 
 
 def test_dot_iter_keys() -> None:
-    d = JsonDict(d1)
+    d = JsonObj(d1)
     expected = [
         "id",
         "code",
@@ -181,7 +181,7 @@ def test_dot_iter_keys() -> None:
 
 
 def test_dot_list_keys() -> None:
-    d = JsonDict(d1)
+    d = JsonObj(d1)
     expected = [
         "id",
         "code",
@@ -200,7 +200,7 @@ def test_dot_list_keys() -> None:
 
 
 def test_dot_list_keys_sorted() -> None:
-    d = JsonDict(d1)
+    d = JsonObj(d1)
     expected = [
         "id",
         "code",
@@ -221,7 +221,7 @@ def test_dot_list_keys_sorted() -> None:
 def test_json_dict_reject_non_string_key():
     t1 = {1: None, 2: 2}
     with pytest.raises(ValueError):
-        jd = JsonDict(t1)
+        jd = JsonObj(t1)
 
 
 def test_filter_none():
@@ -241,9 +241,9 @@ def test_filter_none():
             "is_false": False,
         },
     }
-    result = JsonDict(t1).filter_none()
-    print(JsonDict(t1).filter_none())
-    assert result == JsonDict(
+    result = JsonObj(t1).filter_none()
+    print(JsonObj(t1).filter_none())
+    assert result == JsonObj(
         **{
             "falsey_dict": {},
             "falsey_list": [],
@@ -279,9 +279,9 @@ def test_filter_none_recursive():
             "is_false": False,
         },
     }
-    result = JsonDict(t1).filter_none(recursive=True)
+    result = JsonObj(t1).filter_none(recursive=True)
     print(result)
-    assert result == JsonDict(
+    assert result == JsonObj(
         **{
             "falsey_dict": {},
             "falsey_list": [],
@@ -316,8 +316,8 @@ def test_filter_false():
             "is_false": False,
         },
     }
-    result = JsonDict(t1).filter_false()
-    assert result == JsonDict(
+    result = JsonObj(t1).filter_false()
+    assert result == JsonObj(
         **{
             "b": 2,
             "c": {
@@ -349,5 +349,5 @@ def test_filter_falsey_recursive():
             "is_false": False,
         },
     }
-    result = JsonDict(d).filter_false(recursive=True)
-    assert result == JsonDict(**{"b": 2, "c": {"d": "herm"}})
+    result = JsonObj(d).filter_false(recursive=True)
+    assert result == JsonObj(**{"b": 2, "c": {"d": "herm"}})

@@ -1,8 +1,12 @@
 import datetime
 
+import pytest
+
 from jsonbourne.jsonlib._json_stdlib import JSON_STDLIB
 from jsonbourne.jsonlib._orjson import ORJSON
 from jsonbourne.jsonlib._rapidjson import RAPIDJSON
+
+pytestmark = [pytest.mark.jsonlibs, pytest.mark.optdeps]
 
 D = {
     "key": "value",

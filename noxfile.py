@@ -132,14 +132,27 @@ def attrs_test(session):
     )
 
 
+
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
-def ujson_test(session):
+def jsonlibs_test(session):
     session.install("pytest")
     session.install("ujson")
     session.run(
         "pytest",
         "-m",
-        "ujson or basic",
+        "jsonlibs",
+        "--doctest-modules",
+        TESTS_DIRPATH,
+        JSONBOURNE_PKG_DIRPATH,
+        )
+@nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
+def orjson_test(session):
+    session.install("pytest")
+    session.install("ujson")
+    session.run(
+        "pytest",
+        "-m",
+        "orjson or basic",
         "--doctest-modules",
         TESTS_DIRPATH,
         JSONBOURNE_PKG_DIRPATH,
