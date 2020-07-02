@@ -4,12 +4,11 @@
 Dynamic Graphics Python
 """
 
+from jsonbourne import json
 from jsonbourne.main import JSON
 from jsonbourne.main import JsonDict
 from jsonbourne.main import JsonObj
 from jsonbourne.main import JsonObjMutableMapping
-from jsonbourne.main import _json as json
-from jsonbourne.main import import_json
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 1
@@ -19,6 +18,7 @@ __version__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
 
 JSONLIB = json.__name__
 
+import_json = json.import_json
 __all__ = [
     "VERSION_MAJOR",
     "VERSION_MINOR",
@@ -28,7 +28,6 @@ __all__ = [
     "JsonObj",
     "JsonDict",
     "JSON",
-    "json",
     "JsonObjMutableMapping",
     "import_json",
 ]

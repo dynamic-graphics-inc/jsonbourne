@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """Json Bourne -- EZ-PZ-JSON with lots o goodies"""
 import keyword
+
 import sys
-from datetime import datetime
-from datetime import timedelta
 from itertools import chain
-from pathlib import Path
 from pprint import pformat
 from typing import Any
 from typing import Dict
@@ -17,78 +15,33 @@ from typing import List
 from typing import Set
 from typing import Tuple
 
+from jsonbourne import json
+
+
 if sys.version_info < (3, 7):
     from collections.abc import MutableMapping
+
 
     JsonObjMutableMapping = MutableMapping
 else:
     from typing import MutableMapping
+
 
     JsonObjMutableMapping = MutableMapping[str, Any]
 
 __all__ = [
     "JsonObj",
     "JsonObj",
-    "JSONDecodeError",
-    "JSONEncoder",
     "JsonObjMutableMapping",
-    "loads",
-    "dumps",
-    "dump",
     "stringify",
     "jsonify",
     "JSON",
-    "import_json",
-]
+    ]
 
 
 #############
 # IMPORTING #
 #############
-def _import_rapidjson():
-    import rapidjson
-
-    return rapidjson, rapidjson.JSONDecodeError, rapidjson.Encoder
-
-
-def _import_ujson():
-    import ujson
-
-    return ujson, TypeError, None
-
-
-def _import_json_stdlib():
-    import json
-
-    return json, json.JSONDecodeError, json.JSONEncoder
-
-
-def _import_json(jsonlibs=["rapidjson", "ujson"]) -> Any:
-    lib2funk = {
-        "rapidjson": _import_rapidjson,
-        "ujson": _import_ujson,
-        "json": _import_json_stdlib,
-    }
-
-    for mod in jsonlibs:
-        try:
-            return lib2funk[mod]()
-        except ImportError:
-            pass
-
-    return _import_json_stdlib()
-
-
-def import_json(jsonlibs=["rapidjson", "ujson"]) -> Any:
-    jsonlib, *_ = _import_json(jsonlibs=jsonlibs)
-    return jsonlib
-
-
-_json, JSONDecodeError, JSONEncoder = _import_json()
-
-load = _json.load
-loads = _json.loads
-
 
 def _validate(data: Any) -> Any:
     """Validate/convert data for JSON serialization"""
@@ -97,95 +50,6 @@ def _validate(data: Any) -> Any:
     if isinstance(data, dict) and any(isinstance(val, bytes) for val in data.values()):
         return {k: str(v, encoding="utf-8") for k, v in data.items()}
     return data
-
-
-def _json_encode(obj: Any) -> Any:
-    if isinstance(obj, JsonObj):
-        return obj.eject()
-    if isinstance(obj, Path):
-        return str(obj)
-    if isinstance(obj, datetime):
-        return obj.isoformat()
-    if isinstance(obj, timedelta):
-        return obj.total_seconds()
-    if hasattr(obj, "to_dict"):
-        return obj.to_dict()
-    if hasattr(obj, "dict"):
-        return obj.dict()
-    raise TypeError("Cannot encode obj as JSON: {}".format(str(obj)))
-
-
-def dump(
-    data: Any,
-    fp,
-    minify: bool = False,
-    sort_keys: bool = False,
-    indent: int = 4,
-    default=None,
-    **kwargs,
-) -> None:
-    """JSON dump with minify kwarg added"""
-    return _json.dump(
-        _validate(data),
-        fp,
-        indent=None if minify else indent,
-        sort_keys=sort_keys,
-        ensure_ascii=True,
-        default=default or _json_encode,
-        **kwargs,
-    )
-
-
-def dumpf(
-    data: Any, fp, sort_keys: bool = False, indent: int = 2, default=None, **kwargs
-) -> None:
-    """JSON dump with minify kwarg added"""
-    return _json.dump(
-        _validate(data),
-        fp,
-        indent=indent,
-        sort_keys=sort_keys,
-        ensure_ascii=True,
-        default=default or _json_encode,
-        **kwargs,
-    )
-
-
-def dumps(
-    data: Any,
-    minify: bool = False,
-    sort_keys: bool = False,
-    indent: int = 4,
-    default=None,
-    **kwargs,
-) -> str:
-    """JSON dumps with minify kwarg added"""
-    return str(
-        _json.dumps(
-            _validate(data),
-            indent=None if minify else indent,
-            sort_keys=sort_keys,
-            ensure_ascii=True,
-            default=default or _json_encode,
-            **kwargs,
-        )
-    )
-
-
-def dumpsf(
-    data: Any, sort_keys: bool = False, indent: int = 4, default=None, **kwargs
-) -> str:
-    """JSON dumps formatted with indent (default indent is 4)"""
-    return str(
-        _json.dumps(
-            _validate(data),
-            indent=indent,
-            sort_keys=sort_keys,
-            ensure_ascii=True,
-            default=default or _json_encode,
-            **kwargs,
-        )
-    )
 
 
 def is_identifier(string: str) -> bool:
@@ -292,6 +156,7 @@ class JsonObj(JsonObjMutableMapping):
 
     """
 
+
     def __init__(self, *args, **kwargs) -> None:
         """Use the object dict"""
         self.__dict__.update(*args, **kwargs)
@@ -301,15 +166,18 @@ class JsonObj(JsonObjMutableMapping):
             d = {k: v for k, v in self.__dict__.items() if not isinstance(k, str)}
             raise ValueError(
                 "JsonObj keys MUST be strings! Bad key values: {}".format(str(d))
-            )
+                )
         self.recurse()
+
 
     def recurse(self) -> None:
         """Recusively convert all sub dictionaries to JsonObj objects"""
         self.__dict__.update({k: jsonify(v) for k, v in self.__dict__.items()})
 
+
     def __attrs_post_init__(self) -> None:
         self.recurse()
+
 
     def __contains__(self, key: str) -> bool:  # type: ignore
         """Check if a key or dot-key is contained within the JsonObj object
@@ -340,6 +208,7 @@ class JsonObj(JsonObjMutableMapping):
             val = self.__dict__.get(first_key)
             return isinstance(val, MutableMapping) and val.__contains__(rest)
         return key in self.__dict__
+
 
     def __setitem__(self, key: str, value: Any) -> None:
         """Set JsonObj item with 'key' to 'value'
@@ -376,13 +245,14 @@ class JsonObj(JsonObjMutableMapping):
             raise ValueError(
                 f"Invalid key: ({key}).\n"
                 f"Key cannot be integer or convertable to integer"
-            )
+                )
 
         if not is_identifier(key):
             raise ValueError(
                 f"Invalid key: ({key}).\n" f"Key(s) is not a valid python identifier"
-            )
+                )
         self.__dict__[key] = value
+
 
     def __getattr__(self, item: str) -> Any:
         try:
@@ -391,8 +261,10 @@ class JsonObj(JsonObjMutableMapping):
             pass
         return object.__getattribute__(self, item)
 
+
     def __getattribute__(self, item: str) -> Any:
         return object.__getattribute__(self, item)
+
 
     def __getitem__(self, key: str) -> Any:
         if "." in key:
@@ -406,26 +278,33 @@ class JsonObj(JsonObjMutableMapping):
         except AttributeError:
             raise KeyError(str(key))
 
+
     def __delitem__(self, key: str) -> None:
         del self.__dict__[key]
+
 
     def __iter__(self) -> Iterator[Any]:
         return iter(self.__dict__)
 
+
     def __len__(self) -> int:
         return len(self.__dict__)
+
 
     def items(self) -> ItemsView[str, Any]:
         """Return an items view of the JsonObj object"""
         return self.__dict__.items()
 
+
     def entries(self) -> ItemsView[str, Any]:
         """Alias for items"""
         return self.items()
 
+
     def keys(self) -> KeysView[str]:
         """Return the keys view of the JsonObj object"""
         return self.__dict__.keys()
+
 
     def filter_none(self, recursive: bool = False) -> "JsonObj":
         """Filter key-values where the value is `None` but not false-y
@@ -508,9 +387,10 @@ class JsonObj(JsonObjMutableMapping):
                     else JsonObj(v).filter_none(recursive=True)
                     for k, v in self.items()
                     if v is not None
-                }
-            )
+                    }
+                )
         return JsonObj({k: v for k, v in self.items() if v is not None})
+
 
     def filter_false(self, recursive: bool = False) -> "JsonObj":
         """Filter key-values where the value is false-y
@@ -579,9 +459,10 @@ class JsonObj(JsonObjMutableMapping):
                     else JsonObj(v).filter_false(recursive=True)
                     for k, v in self.items()
                     if v
-                }
-            )
+                    }
+                )
         return JsonObj({k: v for k, v in self.items() if v})
+
 
     def dot_keys(self) -> Iterable[str]:
         """Yield the JsonObj's dot-notation keys
@@ -609,8 +490,9 @@ class JsonObj(JsonObjMutableMapping):
                 if not isinstance(v, JsonObj)
                 else (*(f"{k}.{dk}" for dk in jsonify(v).dot_keys()),)
                 for k, v in self.items()
+                )
             )
-        )
+
 
     def dot_keys_list(self, sort_keys: bool = False) -> List[str]:
         """Return a list of the JsonObj's dot-notation friendly keys
@@ -626,6 +508,7 @@ class JsonObj(JsonObjMutableMapping):
             return sorted(self.dot_keys_list())
         return list(self.dot_keys())
 
+
     def dot_keys_set(self) -> Set[str]:
         """Return a set of the JsonObj's dot-notation friendly keys
 
@@ -634,6 +517,7 @@ class JsonObj(JsonObjMutableMapping):
 
         """
         return set(self.dot_keys())
+
 
     def dot_lookup(self, dot_key: str) -> Any:
         """Look up JsonObj keys using dot notation as a string
@@ -658,12 +542,14 @@ class JsonObj(JsonObjMutableMapping):
                 reached = ".".join(parts[:ix])
                 raise KeyError(
                     f"Invalid DotKey: {dot_key} -- Lookup reached: {reached} => {str(cur_val)}"
-                )
+                    )
         return cur_val
+
 
     def dot_items(self) -> Iterator[Tuple[str, Any]]:
         """Yield tuples of the form (dot-key, value)"""
         return ((dk, self.dot_lookup(dk)) for dk in self.dot_keys())
+
 
     def to_str(self, minify: bool = False, width: int = 88) -> str:
         """Return a string representation of the JsonObj object"""
@@ -675,20 +561,24 @@ class JsonObj(JsonObjMutableMapping):
                 "(**{\n    ",
                 pformat(self.to_dict(), width=width)[1:-1].replace("\n", "\n   "),
                 "\n})",
-            ]
-        )
+                ]
+            )
+
 
     def __repr__(self) -> str:
         """Return the string representation of the object"""
         return self.to_str(minify=True)
 
+
     def __str__(self) -> str:
         """Return the string representation of the JsonObj object"""
         return self.to_str(minify=False)
 
+
     def _repr_html_(self) -> str:
         """Return the HTML representation of the JsonObj object"""
         return "<pre>{}</pre>".format(self.__str__())
+
 
     @classmethod
     def _cls_attr_names(cls) -> Set[str]:
@@ -698,6 +588,7 @@ class JsonObj(JsonObjMutableMapping):
         except AttributeError:
             raise AttributeError("Class is not decorated with attr.attrs")
 
+
     @classmethod
     def _cls_fields(cls) -> Set[str]:
         """Return attrs-attribute names for an object decorated with attrs"""
@@ -705,6 +596,7 @@ class JsonObj(JsonObjMutableMapping):
             return cls.__fields__  # type: ignore
         except AttributeError:
             raise AttributeError("Class does not inherit from pydantic.BaseModel")
+
 
     @classmethod
     def _cls_field_names(cls) -> Set[str]:
@@ -714,9 +606,11 @@ class JsonObj(JsonObjMutableMapping):
         except AttributeError:
             raise AttributeError("Class does not inherit from pydantic.BaseModel")
 
+
     def _field_names(self) -> Set[str]:
         """Return attrs-attribute names for an object decorated with attrs"""
         return self.__class__._cls_field_names()
+
 
     def eject(self) -> Dict[str, Any]:
         """Eject to python-builtin dictionary object
@@ -736,20 +630,24 @@ class JsonObj(JsonObjMutableMapping):
             k: unjsonify(v)
             # if not isinstance(v, JsonObj) else v.eject()
             for k, v in self.__dict__.items()
-        }
+            }
+
 
     def to_dict(self) -> Dict[str, Any]:
         """Return the JsonObj object (and children) as a python dictionary"""
         return self.eject()
 
+
     def asdict(self) -> Dict[str, Any]:
         """Return the JsonObj object (and children) as a python dictionary"""
         return self.eject()
+
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "JsonObj":
         """Return a JsonObj object from a dictionary of data"""
         return cls(**data)
+
 
     @classmethod
     def from_json(cls, json_string: str) -> "JsonObj":
@@ -764,9 +662,8 @@ class JsonObj(JsonObjMutableMapping):
         """
         raise NotImplementedError
 
-    def to_json(
-        self, minify: bool = False, sort_keys: bool = False, indent: int = 4, **kwargs
-    ) -> str:
+
+    def to_json(self, pretty: bool = False, sort_keys: bool = False, **kwargs) -> str:
         """Return a JSON string of the JsonObj object
 
         Args:
@@ -781,15 +678,13 @@ class JsonObj(JsonObjMutableMapping):
         """
         raise NotImplementedError
 
-    def stringify(
-        self, minify: bool = False, sort_keys: bool = False, indent: int = 4, **kwargs
-    ) -> str:
+
+    def stringify(self, pretty: bool = False, sort_keys: bool = False, **kwargs) -> str:
         """Return a JSON string of the JsonObj; `JsonObj.to_json` alias
 
         Args:
-            minify (bool): Return a 'minified' version of the JSON string
+            pretty (bool): If a 'minified' version of the JSON string
             sort_keys (bool): Sort the keys when converting to JSON
-            indent (int): Indent level of the json string
             **kwargs: Keyword args to be passed on to the JSON dumps method
 
         Returns:
@@ -797,7 +692,8 @@ class JsonObj(JsonObjMutableMapping):
 
         """
 
-        return self.to_json(minify=minify, sort_keys=sort_keys, indent=indent, **kwargs)
+        return self.to_json(pretty=pretty, sort_keys=sort_keys, **kwargs)
+
 
     @classmethod
     def _from_json(cls, json_string: str) -> "JsonObj":
@@ -810,11 +706,12 @@ class JsonObj(JsonObjMutableMapping):
             JsonObj: JsonObj object for the given JSON string
 
         """
-        return cls.from_dict(_json.loads(json_string))
+        return cls.from_dict(json.loads(json_string))
+
 
     def _to_json(
-        self, minify: bool = False, sort_keys: bool = False, indent: int = 4, **kwargs
-    ) -> str:
+            self, pretty: bool = False, sort_keys: bool = False, **kwargs
+            ) -> str:
         """Return a JSON string of the JsonObj object
 
         Args:
@@ -827,14 +724,16 @@ class JsonObj(JsonObjMutableMapping):
             str: JSON string of the JsonObj object
 
         """
-        return dumps(
-            self.to_dict(), minify=minify, sort_keys=sort_keys, indent=indent, **kwargs
-        )
+        return json.dumps(
+            self.to_dict(), pretty=pretty, sort_keys=sort_keys, **kwargs
+            )
+
 
     @classmethod
     def validate_type(cls, val: Any) -> "JsonObj":
         """Validate and convert a value to a JsonObj object"""
         return JsonObj(val)
+
 
     @classmethod
     def __get_validators__(cls):
@@ -873,6 +772,7 @@ def unjsonify(value: Any) -> Any:
 class JSONMeta(type):
     """Meta type for use by JSON class to allow for static `__call__` method"""
 
+
     @staticmethod
     def __call__(value: Any):  # type: ignore
         return jsonify(value)
@@ -881,23 +781,25 @@ class JSONMeta(type):
 class JSON(metaclass=JSONMeta):
     """JSON class meant to mimic the js/ts-JSON"""
 
+
     @staticmethod
-    def stringify(data, indent=None, sort_keys=False):
+    def stringify(data, pretty: bool = False, sort_keys=False, default=None, **kwargs):
         return str(
-            _json.dumps(
-                _validate(data),
-                indent=indent,
+            json.dumps(
+                data,
+                pretty=pretty,
                 sort_keys=sort_keys,
-                ensure_ascii=True,
-                default=_json_encode,
+                default=default,
+                **kwargs
+                )
             )
-        )
+
 
     @staticmethod
     def parse(string: str, obj=True):
         if obj:
-            return jsonify(_json.loads(string))
-        return _json.loads(string)
+            return jsonify(json.loads(string))
+        return json.loads(string)
 
 
 stringify = JSON.stringify
@@ -905,5 +807,6 @@ parse = JSON.parse
 
 if __name__ == "__main__":
     import doctest
+
 
     doctest.testmod()
