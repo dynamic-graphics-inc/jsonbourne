@@ -42,5 +42,3 @@ JSONDecodeError = rapidjson.JSONDecodeError
 
 if __name__ == "__main__":
     pass
-    # from doctest import testmod
-    # testmod()
