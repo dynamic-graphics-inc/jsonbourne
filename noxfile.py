@@ -53,7 +53,7 @@ def _get_session_python_site_packages_dir(session):
                 "sys.stdout.write(get_python_lib())",
                 silent=True,
                 log=False,
-            )
+                )
             session._runner._site_packages_dir = site_packages_dir
         finally:
             session._runner.global_config.install_only = old_install_only_value
@@ -68,8 +68,8 @@ def _get_jsonbourne_version() -> str:
     _filepath = path.join(PWD, "pyproject.toml")
     version = (
         [l for l in open(_filepath).read().split("\n") if "version" in l][0]
-        .replace("version = ", "")
-        .strip('"')
+            .replace("version = ", "")
+            .strip('"')
     )
     return version
 
@@ -101,7 +101,7 @@ def base_test(session):
         "--doctest-modules",
         TESTS_DIRPATH,
         JSONBOURNE_PKG_DIRPATH,
-    )
+        )
 
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
@@ -115,7 +115,7 @@ def pydantic_test(session):
         "--doctest-modules",
         TESTS_DIRPATH,
         JSONBOURNE_PKG_DIRPATH,
-    )
+        )
 
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
@@ -129,14 +129,14 @@ def attrs_test(session):
         "--doctest-modules",
         TESTS_DIRPATH,
         JSONBOURNE_PKG_DIRPATH,
-    )
-
+        )
 
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
 def jsonlibs_test(session):
     session.install("pytest")
-    session.install("ujson")
+    session.install("orjson")
+    session.install("python-rapidjson")
     session.run(
         "pytest",
         "-m",
@@ -145,10 +145,11 @@ def jsonlibs_test(session):
         TESTS_DIRPATH,
         JSONBOURNE_PKG_DIRPATH,
         )
+
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
 def orjson_test(session):
     session.install("pytest")
-    session.install("ujson")
+    session.install("orjson")
     session.run(
         "pytest",
         "-m",
@@ -156,7 +157,7 @@ def orjson_test(session):
         "--doctest-modules",
         TESTS_DIRPATH,
         JSONBOURNE_PKG_DIRPATH,
-    )
+        )
 
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
@@ -170,8 +171,7 @@ def rapidjson_test(session):
         "--doctest-modules",
         TESTS_DIRPATH,
         JSONBOURNE_PKG_DIRPATH,
-    )
-
+        )
 
 ### TODO: add orjson (maybe)
 # @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
