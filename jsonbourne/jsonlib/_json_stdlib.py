@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
-from typing import Any
 import json
+from typing import Any
 
 from jsonbourne.jsonlib.base import JsonLib
 from jsonbourne.jsonlib.base import _json_encode_default
 
 
 class JSON_STDLIB(JsonLib):
-
-
     @staticmethod
     def dumps(
-            data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
-            ) -> str:
+        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+    ) -> str:
         separators = (",", ": ") if pretty else (",", ":")
         return json.dumps(
             data,
@@ -21,17 +19,15 @@ class JSON_STDLIB(JsonLib):
             separators=separators,
             default=default or _json_encode_default,
             **kwargs,
-            )
-
+        )
 
     @staticmethod
     def dumpb(
-            data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
-            ) -> str:
+        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+    ) -> str:
         return JSON_STDLIB.dumps(
             data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
-            ).encode()
-
+        ).encode()
 
     @staticmethod
     def loads(string: str, **kwargs) -> Any:

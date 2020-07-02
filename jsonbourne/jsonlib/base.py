@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-from decimal import Decimal
-from datetime import timedelta
-from datetime import datetime
-from pathlib import Path
-from typing import Any
 from abc import ABC
 from abc import abstractmethod
-
+from datetime import datetime
+from datetime import timedelta
+from decimal import Decimal
+from pathlib import Path
+from typing import Any
 
 try:
     import numpy as np
@@ -15,19 +14,19 @@ except ImportError:
 
 
 class JsonLib(ABC):
-
+    @staticmethod
+    @abstractmethod
+    def dumps(
+        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+    ) -> str:
+        ...
 
     @staticmethod
     @abstractmethod
-    def dumps(data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs) -> str:
+    def dumpb(
+        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+    ) -> bytes:
         ...
-
-
-    @staticmethod
-    @abstractmethod
-    def dumpb(data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs) -> bytes:
-        ...
-
 
     @staticmethod
     @abstractmethod

@@ -10,19 +10,21 @@ def _import_rapidjson():
 
 def _import_orjson():
     from jsonbourne.jsonlib._orjson import ORJSON
+
     return ORJSON
 
 
 def _import_json_stdlib():
     from jsonbourne.jsonlib._json_stdlib import JSON_STDLIB
+
     return JSON_STDLIB
 
 
 def import_json(jsonlibs=["orjson", "rapidjson"]) -> JsonLib:
     lib2funk = {
         "rapidjson": _import_rapidjson,
-        "orjson"   : _import_orjson,
-        }
+        "orjson": _import_orjson,
+    }
 
     for mod in jsonlibs:
         try:

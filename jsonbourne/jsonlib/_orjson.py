@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from typing import Any
+
 import orjson
 
 from jsonbourne.jsonlib.base import JsonLib
@@ -10,22 +11,20 @@ try:
 except ImportError:
     np = None
 
+
 class ORJSON(JsonLib):
-
-
     @staticmethod
     def dumps(
-            data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
-            ) -> str:
-        return ORJSON.dumpb(data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs).decode(
-            encoding="utf-8"
-            )
-
+        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+    ) -> str:
+        return ORJSON.dumpb(
+            data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
+        ).decode(encoding="utf-8")
 
     @staticmethod
     def dumpb(
-            data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
-            ) -> bytes:
+        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+    ) -> bytes:
         option = 0
         if pretty:
             option |= orjson.OPT_INDENT_2
@@ -34,8 +33,9 @@ class ORJSON(JsonLib):
         if np:
             option |= orjson.OPT_SERIALIZE_NUMPY
 
-        return orjson.dumps(data, option=option, default=default or _json_encode_default, **kwargs)
-
+        return orjson.dumps(
+            data, option=option, default=default or _json_encode_default, **kwargs
+        )
 
     @staticmethod
     def loads(string: str, **kwargs) -> Any:
