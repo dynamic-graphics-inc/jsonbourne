@@ -1,4 +1,6 @@
 import datetime
+import pathlib
+from decimal import Decimal
 
 import pytest
 
@@ -16,6 +18,9 @@ D = {
     "list": [1, 2, 3, 4, 5],
     "dt": datetime.datetime(1970, 1, 1, 0, 0, 0, 1),
     "sub": {'b': 3, 'key': 'val', 'a': 1,},
+    "apath": pathlib.Path.home(),
+    "Decimal": Decimal(1.4),
+    "timedelta": datetime.timedelta(days=2),
 }
 
 
@@ -59,4 +64,11 @@ def test_datetime():
     oj = ORJSON.dumps(data)
     sj = JSON_STDLIB.dumps(data)
     a = [rj, oj, sj]
+
+    assert all(isinstance(el, str) for el in a)
     assert len(set(a)) == 1
+    rj_bin = RAPIDJSON.dumpb(data)
+    oj_bin = ORJSON.dumpb(data)
+    sj_bin = JSON_STDLIB.dumpb(data)
+    b = [rj_bin, oj_bin, sj_bin]
+    assert all(isinstance(el, bytes) for el in b)

@@ -35,20 +35,6 @@ __all__ = [
 ]
 
 
-#############
-# IMPORTING #
-#############
-
-
-def _validate(data: Any) -> Any:
-    """Validate/convert data for JSON serialization"""
-    if isinstance(data, JsonObj):
-        data = data.eject()
-    if isinstance(data, dict) and any(isinstance(val, bytes) for val in data.values()):
-        return {k: str(v, encoding="utf-8") for k, v in data.items()}
-    return data
-
-
 def is_identifier(string: str) -> bool:
     """Return True if a string is a valid python identifier; False otherwise
 
@@ -246,6 +232,31 @@ class JsonObj(JsonObjMutableMapping):
         self.__dict__[key] = value
 
     def __getattr__(self, item: str) -> Any:
+        """Return an attr
+
+        Examples:
+            >>> d = {
+            ...     'falsey_dict': {},
+            ...     'falsey_list': [],
+            ...     'falsey_string': '',
+            ...     'is_false': False,
+            ...     'a': None,
+            ...     'b': 2,
+            ...     'c': {
+            ...         'd': 'herm',
+            ...         'e': None,
+            ...         'falsey_dict': {},
+            ...         'falsey_list': [],
+            ...         'falsey_string': '',
+            ...         'is_false': False,
+            ...     },
+            ...     }
+            ...
+            >>> d = JsonObj(d)
+            >>> d.__getattr__('b')
+            2
+
+        """
         try:
             return self.__dict__[item]
         except KeyError:
