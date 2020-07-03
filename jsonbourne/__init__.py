@@ -11,8 +11,8 @@ from jsonbourne.core import JsonObj
 from jsonbourne.core import JsonObjMutableMapping
 
 VERSION_MAJOR = 0
-VERSION_MINOR = 1
-VERSION_PATCH = 1
+VERSION_MINOR = 2
+VERSION_PATCH = 0
 VERSION_INFO = (VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
 __version__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
 
