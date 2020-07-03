@@ -3,15 +3,17 @@ from jsonbourne.jsonlib.base import JsonLib
 
 
 def _import_rapidjson():
-    import rapidjson
+    # import rapidjson
     from jsonbourne.jsonlib import _rapidjson
-
+    if not _rapidjson.rapidjson:
+        raise ImportError('rapidjson')
     return _rapidjson.RAPIDJSON
 
 
 def _import_orjson():
-    import orjson
     from jsonbourne.jsonlib import _orjson
+    if not _orjson.orjson:
+        raise ImportError('orjson')
 
     return _orjson.ORJSON
 
@@ -25,9 +27,9 @@ def _import_json_stdlib():
 def import_json(jsonlibs=["orjson", "rapidjson"]) -> JsonLib:
     lib2funk = {
         "rapidjson": _import_rapidjson,
-        "orjson": _import_orjson,
-        "json": _import_json_stdlib,
-    }
+        "orjson"   : _import_orjson,
+        "json"     : _import_json_stdlib,
+        }
 
     for mod in jsonlibs:
         try:

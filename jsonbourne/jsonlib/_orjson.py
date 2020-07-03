@@ -7,7 +7,7 @@ from jsonbourne.jsonlib.base import _json_encode_default
 try:
     import orjson
 except ImportError:
-    pass
+    orjson = None
 
 try:
     import numpy as np

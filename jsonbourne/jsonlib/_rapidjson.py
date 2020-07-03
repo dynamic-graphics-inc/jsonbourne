@@ -4,22 +4,26 @@ from typing import Any
 from jsonbourne.jsonlib.base import JsonLib
 from jsonbourne.jsonlib.base import _json_encode_default
 
+
 try:
     import rapidjson
+
 
     JSONEncoder = rapidjson.Encoder
     JSONDecoder = rapidjson.Decoder
     JSONDecodeError = rapidjson.JSONDecodeError
 except ImportError:
-    pass
+    rapidjson = None
 JSONLIB = 'rapidjson'
 
 
 class RAPIDJSON(JsonLib):
+
+
     @staticmethod
     def dumps(
-        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
-    ) -> str:
+            data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+            ) -> str:
         return rapidjson.dumps(
             data,
             indent=2 if pretty else None,
@@ -27,15 +31,17 @@ class RAPIDJSON(JsonLib):
             default=default or _json_encode_default,
             datetime_mode=rapidjson.DM_ISO8601,
             **kwargs,
-        )
+            )
+
 
     @staticmethod
     def dumpb(
-        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
-    ) -> str:
+            data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+            ) -> str:
         return RAPIDJSON.dumps(
             data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
-        ).encode()
+            ).encode()
+
 
     @staticmethod
     def loads(string: str, **kwargs) -> Any:
