@@ -4,23 +4,30 @@
 Dynamic Graphics Python
 """
 
-__version__ = "0.1.1"
+from jsonbourne import json
+from jsonbourne.core import JSON
+from jsonbourne.core import JsonDict
+from jsonbourne.core import JsonObj
+from jsonbourne.core import JsonObjMutableMapping
 
-JSONS = ("rapidjson", "orjson", "ujson", "simplejson")
-JSONLIB = None
+VERSION_MAJOR = 0
+VERSION_MINOR = 1
+VERSION_PATCH = 1
+VERSION_INFO = (VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
+__version__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
 
-
-def import_json(jsons=JSONS):
-    """Import the best possible given a priority list"""
-    for mod in jsons:
-        try:
-            return __import__(mod)
-        except ImportError:
-            pass
-    import json as _json
-
-    return _json
-
-
-json = import_json()
 JSONLIB = json.__name__
+
+import_json = json.import_json
+__all__ = [
+    "VERSION_MAJOR",
+    "VERSION_MINOR",
+    "VERSION_PATCH",
+    "VERSION_INFO",
+    "__version__",
+    "JsonObjMutableMapping",
+    "JsonObj",
+    "JsonDict",
+    "JSON",  # js/ts JSON
+    "json",  # json compat lib
+]

@@ -112,3 +112,8 @@ node_modules/
 .DS_Store
 *~
 .*.sw[po]
+.venv_lin/
+.venv/
+.venv_win/
+.nox/
+mypy_reports/
