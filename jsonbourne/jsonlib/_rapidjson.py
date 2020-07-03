@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 from typing import Any
 
-import rapidjson
-
 from jsonbourne.jsonlib.base import JsonLib
 from jsonbourne.jsonlib.base import _json_encode_default
 
+try:
+    import rapidjson
+
+    JSONEncoder = rapidjson.Encoder
+    JSONDecoder = rapidjson.Decoder
+    JSONDecodeError = rapidjson.JSONDecodeError
+except ImportError:
+    pass
 JSONLIB = 'rapidjson'
 
 
@@ -35,10 +41,6 @@ class RAPIDJSON(JsonLib):
     def loads(string: str, **kwargs) -> Any:
         return rapidjson.loads(string, **kwargs)
 
-
-JSONEncoder = rapidjson.Encoder
-JSONDecoder = rapidjson.Decoder
-JSONDecodeError = rapidjson.JSONDecodeError
 
 if __name__ == "__main__":
     pass

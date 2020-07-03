@@ -21,4 +21,4 @@ def test_rapidjson():
     dictionary = {"a": 1, "b": 2, "c": 3}
     string = _rapidjson.dumps(dictionary)
     assert dictionary == _rapidjson.loads(string)
-    assert _rapidjson.__name__ in {libname, "json"}
+    assert _rapidjson.__name__.lower() in {libname, "json", 'RAPIDJSON'}

@@ -2,9 +2,12 @@ import datetime
 
 import pytest
 
-from jsonbourne.jsonlib._json_stdlib import JSON_STDLIB
-from jsonbourne.jsonlib._orjson import ORJSON
-from jsonbourne.jsonlib._rapidjson import RAPIDJSON
+try:
+    from jsonbourne.jsonlib._json_stdlib import JSON_STDLIB
+    from jsonbourne.jsonlib._orjson import ORJSON
+    from jsonbourne.jsonlib._rapidjson import RAPIDJSON
+except (ImportError, ModuleNotFoundError):
+    pass
 
 pytestmark = [pytest.mark.jsonlibs, pytest.mark.optdeps]
 

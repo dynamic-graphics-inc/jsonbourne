@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from typing import Any
 
-import orjson
-
 from jsonbourne.jsonlib.base import JsonLib
 from jsonbourne.jsonlib.base import _json_encode_default
+
+try:
+    import orjson
+except ImportError:
+    pass
 
 try:
     import numpy as np

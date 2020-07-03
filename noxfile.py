@@ -153,7 +153,7 @@ def orjson_test(session):
     session.run(
         "pytest",
         "-m",
-        "orjson or basic",
+        "basic or orjson",
         "--doctest-modules",
         TESTS_DIRPATH,
         JSONBOURNE_PKG_DIRPATH,

@@ -25,9 +25,9 @@ __all__ = [
     "VERSION_PATCH",
     "VERSION_INFO",
     "__version__",
+    "JsonObjMutableMapping",
     "JsonObj",
     "JsonDict",
-    "JSON",
-    "JsonObjMutableMapping",
-    "import_json",
+    "JSON",  # js/ts JSON
+    "json",  # json compat lib
 ]

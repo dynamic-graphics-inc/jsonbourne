@@ -13,31 +13,13 @@ def test_uno():
     assert dictionary == json.loads(string)
 
 
-def test_rapidjson():
-    libname = "rapidjson"
-    _rapidjson = import_json((libname,))
-    dictionary = {"a": 1, "b": 2, "c": 3}
-    string = _rapidjson.dumps(dictionary)
-    assert dictionary == _rapidjson.loads(string)
-    assert _rapidjson.__name__ in {libname, "json"}
-
-
-def test_ujson():
-    libname = "ujson"
-    _ujson = import_json((libname,))
-    dictionary = {"a": 1, "b": 2, "c": 3}
-    string = _ujson.dumps(dictionary)
-    assert dictionary == _ujson.loads(string)
-    assert _ujson.__name__ in {libname, "json"}
-
-
 def test_stdlibjson():
     libname = "json"
     _stdlibjson = import_json((libname,))
     dictionary = {"a": 1, "b": 2, "c": 3}
     string = _stdlibjson.dumps(dictionary)
     assert dictionary == _stdlibjson.loads(string)
-    assert _stdlibjson.__name__ == libname
+    assert _stdlibjson.__name__ in {libname, 'JSON_STDLIB'}
 
 
 #### MAYBE SOME DAY!
@@ -57,3 +39,11 @@ def test_stdlibjson():
 #     string = _simplejson.dumps(dictionary)
 #     assert dictionary == _simplejson.loads(string)
 #     assert _simplejson.__name__ in {libname, "json"}
+#
+# def test_ujson():
+#     libname = "ujson"
+#     _ujson = import_json((libname,))
+#     dictionary = {"a": 1, "b": 2, "c": 3}
+#     string = _ujson.dumps(dictionary)
+#     assert dictionary == _ujson.loads(string)
+#     assert _ujson.__name__ in {libname, "json"}
