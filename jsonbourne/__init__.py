@@ -5,10 +5,10 @@ Dynamic Graphics Python
 """
 
 from jsonbourne import json
-from jsonbourne.main import JSON
-from jsonbourne.main import JsonDict
-from jsonbourne.main import JsonObj
-from jsonbourne.main import JsonObjMutableMapping
+from jsonbourne.core import JSON
+from jsonbourne.core import JsonDict
+from jsonbourne.core import JsonObj
+from jsonbourne.core import JsonObjMutableMapping
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 1
