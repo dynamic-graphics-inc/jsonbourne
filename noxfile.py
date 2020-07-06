@@ -98,9 +98,7 @@ def base_test(session):
         "pytest",
         "-m",
         "not optdeps",
-        "--doctest-modules",
         TESTS_DIRPATH,
-        JSONBOURNE_PKG_DIRPATH,
         )
 
 
@@ -126,9 +124,7 @@ def attrs_test(session):
         "pytest",
         "-m",
         "basic or attrs",
-        "--doctest-modules",
         TESTS_DIRPATH,
-        JSONBOURNE_PKG_DIRPATH,
         )
 
 
@@ -141,9 +137,7 @@ def jsonlibs_test(session):
         "pytest",
         "-m",
         "jsonlibs",
-        "--doctest-modules",
         TESTS_DIRPATH,
-        JSONBOURNE_PKG_DIRPATH,
         )
 
 @nox.session(venv_backend=VENV_BACKEND, reuse_venv=True)
@@ -154,9 +148,7 @@ def orjson_test(session):
         "pytest",
         "-m",
         "basic or orjson",
-        "--doctest-modules",
         TESTS_DIRPATH,
-        JSONBOURNE_PKG_DIRPATH,
         )
 
 
@@ -168,9 +160,7 @@ def rapidjson_test(session):
         "pytest",
         "-m",
         "rapidjson or basic",
-        "--doctest-modules",
         TESTS_DIRPATH,
-        JSONBOURNE_PKG_DIRPATH,
         )
 
 ### TODO: add orjson (maybe)

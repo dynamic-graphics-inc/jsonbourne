@@ -14,5 +14,5 @@ extend-ignore =
     WPS202
     WPS305
     WPS326
-# per-file-ignores =
-    # path/to/file.py:E501,W605,W293,W291,XXX
+per-file-ignores =
+    jsonbourne/__init__.py:F401

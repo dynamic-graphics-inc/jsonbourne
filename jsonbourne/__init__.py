@@ -10,6 +10,14 @@ from jsonbourne.core import JsonDict
 from jsonbourne.core import JsonObj
 from jsonbourne.core import JsonObjMutableMapping
 
+try:
+    from jsonbourne.pydantic import JsonBaseModel
+    from jsonbourne.pydantic import JsonBaseModelDefaultConfig
+
+    _jsonbourne_pydantic = ['JsonBaseModelDefaultConfig', 'JsonBaseModel']
+except (ImportError, ModuleNotFoundError, NameError):
+    _jsonbourne_pydantic = []
+
 VERSION_MAJOR = 0
 VERSION_MINOR = 2
 VERSION_PATCH = 0
@@ -30,4 +38,5 @@ __all__ = [
     "JsonDict",
     "JSON",  # js/ts JSON
     "json",  # json compat lib
+    *_jsonbourne_pydantic,
 ]

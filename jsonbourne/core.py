@@ -27,7 +27,7 @@ else:
 
 __all__ = [
     "JsonObj",
-    "JsonObj",
+    "JsonDict",
     "JsonObjMutableMapping",
     "stringify",
     "jsonify",
