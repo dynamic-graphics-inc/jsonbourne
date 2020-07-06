@@ -746,7 +746,9 @@ class JSON(metaclass=JSONMeta):
     """JSON class meant to mimic the js/ts-JSON"""
 
     @staticmethod
-    def stringify(data, pretty: bool = False, sort_keys=False, default=None, **kwargs):
+    def stringify(
+        data, pretty: bool = False, sort_keys=False, default=None, **kwargs
+    ) -> str:
         return str(
             json.dumps(
                 data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
@@ -754,7 +756,9 @@ class JSON(metaclass=JSONMeta):
         )
 
     @staticmethod
-    def dumps(data, pretty: bool = False, sort_keys=False, default=None, **kwargs):
+    def dumps(
+        data, pretty: bool = False, sort_keys=False, default=None, **kwargs
+    ) -> str:
         return str(
             json.dumps(
                 data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
@@ -762,8 +766,20 @@ class JSON(metaclass=JSONMeta):
         )
 
     @staticmethod
-    def dumpb(data, pretty: bool = False, sort_keys=False, default=None, **kwargs):
-        return str(
+    def binify(
+        data, pretty: bool = False, sort_keys=False, default=None, **kwargs
+    ) -> bytes:
+        return bytes(
+            json.dumpb(
+                data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
+            )
+        )
+
+    @staticmethod
+    def dumpb(
+        data, pretty: bool = False, sort_keys=False, default=None, **kwargs
+    ) -> bytes:
+        return bytes(
             json.dumpb(
                 data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
             )
@@ -784,8 +800,3 @@ class JSON(metaclass=JSONMeta):
 
 stringify = JSON.stringify
 parse = JSON.parse
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()
