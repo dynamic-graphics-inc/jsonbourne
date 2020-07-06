@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jsonbourne"
-version = "0.2.0"
+version = "0.3.0"
 description = "Import the best JSON lib"
 license = "MIT"
 authors = ["jesse <jesse@dgi.com>"]
