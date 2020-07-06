@@ -30,6 +30,7 @@ __all__ = [
     "JsonDict",
     "JsonObjMutableMapping",
     "stringify",
+    "parse",
     "jsonify",
     "JSON",
 ]
@@ -753,7 +754,29 @@ class JSON(metaclass=JSONMeta):
         )
 
     @staticmethod
-    def parse(string: str, obj=True):
+    def dumps(data, pretty: bool = False, sort_keys=False, default=None, **kwargs):
+        return str(
+            json.dumps(
+                data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
+            )
+        )
+
+    @staticmethod
+    def dumpb(data, pretty: bool = False, sort_keys=False, default=None, **kwargs):
+        return str(
+            json.dumpb(
+                data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
+            )
+        )
+
+    @staticmethod
+    def loads(string: str, obj: bool = False, **kwargs) -> Any:
+        if obj:
+            return jsonify(json.loads(string))
+        return json.loads(string)
+
+    @staticmethod
+    def parse(string: str, obj: bool = True) -> Any:
         if obj:
             return jsonify(json.loads(string))
         return json.loads(string)

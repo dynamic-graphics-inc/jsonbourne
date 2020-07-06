@@ -5,38 +5,35 @@ Dynamic Graphics Python
 """
 
 from jsonbourne import json
+from jsonbourne._version import VERSION_INFO
+from jsonbourne._version import VERSION_MAJOR
+from jsonbourne._version import VERSION_MINOR
+from jsonbourne._version import VERSION_PATCH
+from jsonbourne._version import __version__
 from jsonbourne.core import JSON
 from jsonbourne.core import JsonDict
 from jsonbourne.core import JsonObj
 from jsonbourne.core import JsonObjMutableMapping
-
-try:
-    from jsonbourne.pydantic import JsonBaseModel
-    from jsonbourne.pydantic import JsonBaseModelDefaultConfig
-
-    _jsonbourne_pydantic = ['JsonBaseModelDefaultConfig', 'JsonBaseModel']
-except (ImportError, ModuleNotFoundError, NameError):
-    _jsonbourne_pydantic = []
-
-VERSION_MAJOR = 0
-VERSION_MINOR = 3
-VERSION_PATCH = 0
-VERSION_INFO = (VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
-__version__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
+from jsonbourne.core import parse
+from jsonbourne.core import stringify
 
 JSONLIB = json.__name__
 
 import_json = json.import_json
 __all__ = [
+    "JSON",  # js/ts JSON (THE ONE TO USE)
+    "json",  # json compat lib
+    # core
+    "JsonObjMutableMapping",
+    "JsonObj",
+    "JsonDict",
+    # util funks
+    "stringify",
+    "parse",
+    # Version stuff
     "VERSION_MAJOR",
     "VERSION_MINOR",
     "VERSION_PATCH",
     "VERSION_INFO",
     "__version__",
-    "JsonObjMutableMapping",
-    "JsonObj",
-    "JsonDict",
-    "JSON",  # js/ts JSON
-    "json",  # json compat lib
-    *_jsonbourne_pydantic,
 ]
