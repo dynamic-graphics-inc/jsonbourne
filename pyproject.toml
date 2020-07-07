@@ -6,8 +6,8 @@ license = "MIT"
 authors = ["jesse <jesse@dgi.com>"]
 repository = "https://github.com/dynamic-graphics-inc/jsonbourne"
 packages = [
-    { include = "jsonbourne", from = "src" },
-    { include = "jsonb.py", from = "src" },
+    { include = "jsonbourne", from = "." },
+    { include = "jsonb.py", from = "." },
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",

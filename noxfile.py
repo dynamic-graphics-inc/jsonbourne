@@ -19,7 +19,7 @@ nox.options.envdir = ".nox_win" if is_win() else ".nox"
 
 IS_GITLAB_CI = "GITLAB_CI" in os.environ
 PWD = path.abspath(path.dirname(__file__))
-JSONBOURNE_PKG_DIRPATH = path.join(PWD, "src", "jsonbourne")
+JSONBOURNE_PKG_DIRPATH = path.join(PWD, "jsonbourne")
 TESTS_DIRPATH = path.join(PWD, "tests")
 
 VENV_BACKEND = None if is_win() else "conda"
