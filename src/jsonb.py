@@ -20,7 +20,6 @@ from jsonbourne.core import stringify
 
 JSONLIB = json.__name__
 
-import_json = json.import_json
 __all__ = [
     "JSON",  # js/ts JSON (THE ONE TO USE)
     "json",  # json compat lib

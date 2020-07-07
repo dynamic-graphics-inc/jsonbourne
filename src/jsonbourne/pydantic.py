@@ -8,15 +8,7 @@ from typing import Set
 
 from jsonbourne import json
 from jsonbourne.core import JsonObj
-
-HAS_PYDANTIC = False
-try:
-
-    from pydantic import BaseModel  # type: ignore
-
-    HAS_PYDANTIC = True
-except (ImportError, ModuleNotFoundError):
-    pass
+from pydantic import BaseModel  # type: ignore
 
 __all__ = ['JsonBaseModelDefaultConfig', 'JsonBaseModel']
 

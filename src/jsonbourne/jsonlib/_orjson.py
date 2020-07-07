@@ -4,10 +4,10 @@ from typing import Any
 from jsonbourne.jsonlib.base import JsonLib
 from jsonbourne.jsonlib.base import _json_encode_default
 
-try:
-    import orjson
-except ImportError:
-    orjson = None
+import orjson
+
+# except ImportError:
+#     orjson = None
 
 try:
     import numpy as np

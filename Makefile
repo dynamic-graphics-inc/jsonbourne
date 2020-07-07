@@ -4,8 +4,8 @@ PKG_NAME := $(shell cat pyproject.toml | grep name | awk '{print $$3}' | sed 's/
 PWD_DIRPATH = .
 TESTS_DIRPATH = ${PWD}/tests
 
-isort = isort -rc -sl -y $(PKG_NAME) tests
-black = black -S -l 88 $(PKG_NAME) tests
+isort = isort -rc -sl -y src tests
+black = black -S -l 88 src tests
 
 nbs = $(wildcard *.ipynb)
 mds = $(nbs:%.ipynb=%.md)

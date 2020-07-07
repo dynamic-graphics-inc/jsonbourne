@@ -72,3 +72,15 @@ def test_datetime():
     sj_bin = JSON_STDLIB.dumpb(data)
     b = [rj_bin, oj_bin, sj_bin]
     assert all(isinstance(el, bytes) for el in b)
+
+
+def test_import_rapidjson():
+    from jsonbourne._import import _import_rapidjson
+
+    rj = _import_rapidjson()
+
+
+def test_import_orjson():
+    from jsonbourne._import import _import_orjson
+
+    oj = _import_orjson()

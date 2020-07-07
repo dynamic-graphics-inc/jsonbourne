@@ -11,7 +11,6 @@
 from decimal import Decimal
 
 import pytest
-
 from jsonbourne import JsonObj
 
 pytestmark = [pytest.mark.basic]

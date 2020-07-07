@@ -803,9 +803,9 @@ class JSON(metaclass=JSONMeta):
             return jsonify(json.loads(string))
         return json.loads(string)
 
-    @property
-    def json_lib(self) -> str:
-        return str(json.__name__)
+    @staticmethod
+    def json_lib() -> Any:
+        return json._json.__name__
 
 
 stringify = JSON.stringify

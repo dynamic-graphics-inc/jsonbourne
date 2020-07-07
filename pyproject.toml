@@ -5,7 +5,8 @@ description = "Import the best JSON lib"
 license = "MIT"
 authors = ["jesse <jesse@dgi.com>"]
 packages = [
-    { include = "jsonbourne", from = "." }
+    { include = "jsonbourne", from = "src" },
+    { include = "jsonb.py", from = "src" },
 ]
 
 [tool.poetry.dependencies]
