@@ -48,15 +48,15 @@ jobs:
       - name: Test with pytest
         run: |
           nox -k test
-      - name: list dist files
-        run: |
-          ${{ matrix.ls || 'ls -lh' }} dist/
-          twine check dist/*
-      - name: Store dist artifacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: pypi_files
-          path: dist
+#      - name: list dist files
+#        run: |
+#          ${{ matrix.ls || 'ls -lh' }} dist/
+#          twine check dist/*
+#      - name: Store dist artifacts
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: pypi_files
+#          path: dist
 
   deploy:
     name: Deploy
