@@ -1,6 +1,7 @@
 from os import path
 
 import pytest
+
 from jsonbourne import __version__
 
 pytestmark = [pytest.mark.basic]

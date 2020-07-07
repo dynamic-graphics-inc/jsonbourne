@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
+
 from jsonbourne import import_json
 
 pytestmark = [pytest.mark.orjson, pytest.mark.optdeps]

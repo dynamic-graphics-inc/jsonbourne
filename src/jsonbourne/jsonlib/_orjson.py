@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from typing import Any
 
+import orjson
+
 from jsonbourne.jsonlib.base import JsonLib
 from jsonbourne.jsonlib.base import _json_encode_default
-
-import orjson
 
 # except ImportError:
 #     orjson = None

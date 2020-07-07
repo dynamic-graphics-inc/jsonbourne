@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 """`jsonbourne` version"""
-
-VERSION_MAJOR = 0
-VERSION_MINOR = 4
-VERSION_PATCH = 0
+__version__ = "0.4.1"
+VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH = [int(el) for el in __version__.split('.')]
 VERSION_INFO = (VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
-__version__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
 
 __all__ = [
     "VERSION_MAJOR",

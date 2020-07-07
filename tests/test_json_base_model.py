@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+
 from jsonbourne import JsonObj
 from jsonbourne import json
 

@@ -6,9 +6,10 @@ from typing import Any
 from typing import Dict
 from typing import Set
 
+from pydantic import BaseModel  # type: ignore
+
 from jsonbourne import json
 from jsonbourne.core import JsonObj
-from pydantic import BaseModel  # type: ignore
 
 __all__ = ['JsonBaseModelDefaultConfig', 'JsonBaseModel']
 
