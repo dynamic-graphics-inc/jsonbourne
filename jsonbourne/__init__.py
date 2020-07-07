@@ -5,6 +5,7 @@ Dynamic Graphics Python
 """
 
 from jsonbourne import json
+from jsonbourne._import import import_json
 from jsonbourne._version import VERSION_INFO
 from jsonbourne._version import VERSION_MAJOR
 from jsonbourne._version import VERSION_MINOR
@@ -27,6 +28,8 @@ __all__ = [
     "JsonObjMutableMapping",
     "JsonObj",
     "JsonDict",
+    # import
+    "import_json",
     # util funks
     "stringify",
     "parse",

@@ -635,7 +635,20 @@ class JsonObj(JsonObjMutableMapping):
             JsonObj: JsonObj object for the given JSON string
 
         """
-        raise NotImplementedError
+        return cls.from_json(json_string)
+
+    @classmethod
+    def _from_json(cls, json_string: str) -> "JsonObj":
+        """Return a JsonObj object from a json string
+
+        Args:
+            json_string (str): JSON string to convert to a JsonObj
+
+        Returns:
+            JsonObj: JsonObj object for the given JSON string
+
+        """
+        return cls.from_dict(json.loads(json_string))
 
     def to_json(self, pretty: bool = False, sort_keys: bool = False, **kwargs) -> str:
         """Return a JSON string of the JsonObj object
@@ -650,7 +663,7 @@ class JsonObj(JsonObjMutableMapping):
             str: JSON string of the JsonObj object
 
         """
-        raise NotImplementedError
+        return self._to_json(pretty=pretty, sort_keys=sort_keys, **kwargs)
 
     def stringify(self, pretty: bool = False, sort_keys: bool = False, **kwargs) -> str:
         """Return a JSON string of the JsonObj; `JsonObj.to_json` alias
@@ -664,21 +677,7 @@ class JsonObj(JsonObjMutableMapping):
             str: JSON string of the JsonObj object
 
         """
-
         return self.to_json(pretty=pretty, sort_keys=sort_keys, **kwargs)
-
-    @classmethod
-    def _from_json(cls, json_string: str) -> "JsonObj":
-        """Return a JsonObj object from a json string
-
-        Args:
-            json_string (str): JSON string to convert to a JsonObj
-
-        Returns:
-            JsonObj: JsonObj object for the given JSON string
-
-        """
-        return cls.from_dict(json.loads(json_string))
 
     def _to_json(self, pretty: bool = False, sort_keys: bool = False, **kwargs) -> str:
         """Return a JSON string of the JsonObj object
@@ -720,6 +719,13 @@ def jsonify(value: Any) -> Any:
         return [jsonify(el) for el in value]
     if isinstance(value, tuple):
         return tuple([jsonify(el) for el in value])
+    if isinstance(value, str):
+        try:
+            data = json.loads(value)
+            return jsonify(data)
+        except Exception:
+            pass
+
     return value
 
 
@@ -796,6 +802,10 @@ class JSON(metaclass=JSONMeta):
         if obj:
             return jsonify(json.loads(string))
         return json.loads(string)
+
+    @property
+    def json_lib(self) -> str:
+        return str(json.__name__)
 
 
 stringify = JSON.stringify
