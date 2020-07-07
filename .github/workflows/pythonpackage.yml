@@ -34,14 +34,7 @@ jobs:
       matrix:
         os:
           - ubuntu
-#          - windows
-#          - macos
         python-version: [3.6, 3.7, 3.8, 'pypy3']
-        include:
-          - os: ubuntu
-            platform: linux
-          - os: windows
-            ls: dir
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
