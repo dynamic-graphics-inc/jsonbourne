@@ -44,13 +44,14 @@ pydantic = ["pydantic"]
 full = ["orjson", "pydantic", "python-rapidjson"]
 
 
+
 [tool.dephell.main]
 from = {format = "poetry", path = "pyproject.toml"}
 to = {format = "setuppy", path = "setup.py"}
 # explicitly specify your versioning scheme to let your users know what they can expect
 versioning = "semver"
 # git tag template for releases
-tag = "v."
+tag = "v"
 
 [tool.dephell.vendorized]
 from = {format = "poetry", path = "pyproject.toml"}
@@ -66,7 +67,3 @@ exclude = ["jinja2", "tests", "setuptools", "pip"]
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
-
-###############
-### DEPHELL ###
-###############
