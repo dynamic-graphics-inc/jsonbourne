@@ -23,8 +23,6 @@ ___
 
 **WHY???** Three reasons: **1)** Why not? **2)** Also I (jessekrubin) wanted a python object that was a hybrid between a dictionary and an python-object that worked kinda like a js object. **3)** Was able to get `jsonbourne` on pip
 
-**HOW???** Python! NOTE: I tried to make the actual internals of the `jsonbourne.JsonObj` use list/dict comprehensions everywhere as an experiment.
-
 ___
 
 ## Usage:
