@@ -21,7 +21,6 @@ __all__ = [
     "JsonObjT",
 ]
 
-
 # Json friendly: Union[None, bool, int, float, str, List[Any], Dict[str, Any]]
 JsonDictT = Dict[str, Any]
 JsonObjT = Dict[str, Any]

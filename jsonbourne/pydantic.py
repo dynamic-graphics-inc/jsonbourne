@@ -30,7 +30,7 @@ class JsonBaseModelDefaultConfig:
 class JsonBaseModel(BaseModel, JsonObj):
     Config = JsonBaseModelDefaultConfig
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         """Construct a JsonBaseModel and allow for `__post_init__` functions"""
         super().__init__(*args, **kwargs)
         self.__post_init__()
@@ -39,7 +39,7 @@ class JsonBaseModel(BaseModel, JsonObj):
         """Function place holder that is called after object initialization"""
         pass  # pylint: disable=unnecessary-pass
 
-    def to_str(self, minify=False, fmt_kwargs=False) -> str:
+    def to_str(self, minify: bool = False, fmt_kwargs: bool = False) -> str:
         if fmt_kwargs:
             return type(self).__name__ + "(" + self.__repr_str__(", ") + ")"
         if minify:
@@ -145,11 +145,6 @@ class JsonBaseModel(BaseModel, JsonObj):
     def to_dict(self) -> Dict[str, Any]:
         """Eject and return object as plain jane dictionary"""
         return self.eject()
-
-    @classmethod
-    def _cls_docstring(cls):
-        # TODO: add auto doc gen for classes that are JsonBaseModels
-        pass
 
     @classmethod
     def from_dict_filtered(cls, dictionary) -> "JsonBaseModel":

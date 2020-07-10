@@ -6,6 +6,8 @@ from datetime import timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
+from typing import Callable
+from typing import Optional
 
 try:
     import numpy as np
@@ -17,14 +19,22 @@ class JsonLib(ABC):
     @staticmethod
     @abstractmethod
     def dumps(
-        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+        data: Any,
+        pretty: bool = False,
+        sort_keys: bool = False,
+        default: Optional[Callable[[Any], Any]] = None,
+        **kwargs: Any
     ) -> str:
         ...
 
     @staticmethod
     @abstractmethod
     def dumpb(
-        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+        data: Any,
+        pretty: bool = False,
+        sort_keys: bool = False,
+        default: Optional[Callable[[Any], Any]] = None,
+        **kwargs: Any
     ) -> bytes:
         ...
 

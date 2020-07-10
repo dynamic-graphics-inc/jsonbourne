@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Any
+from typing import Callable
+from typing import Optional
 
 import orjson
 
@@ -15,7 +17,11 @@ except ImportError:
 class ORJSON(JsonLib):
     @staticmethod
     def dumps(
-        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+        data: Any,
+        pretty: bool = False,
+        sort_keys: bool = False,
+        default: Optional[Callable[[Any], Any]] = None,
+        **kwargs: Any
     ) -> str:
         return ORJSON.dumpb(
             data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
@@ -23,11 +29,15 @@ class ORJSON(JsonLib):
 
     @staticmethod
     def dumpb(
-        data: Any, pretty: bool = False, sort_keys: bool = False, default=None, **kwargs
+        data: Any,
+        pretty: bool = False,
+        sort_keys: bool = False,
+        default: Optional[Callable[[Any], Any]] = None,
+        **kwargs: Any
     ) -> bytes:
         option = 0
         if pretty:
-            option |= orjson.OPT_INDENT_2
+            option |= orjson.OPT_INDENT_2  # type: ignore
         if sort_keys:
             option |= orjson.OPT_SORT_KEYS
         if np:
@@ -38,8 +48,8 @@ class ORJSON(JsonLib):
         )
 
     @staticmethod
-    def loads(string: str, **kwargs) -> Any:
-        return orjson.loads(string, **kwargs)
+    def loads(string: str, **kwargs: Any) -> Any:
+        return orjson.loads(string)
 
 
 if __name__ == "__main__":

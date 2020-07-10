@@ -5,12 +5,14 @@ import sys
 from itertools import chain
 from pprint import pformat
 from typing import Any
+from typing import Callable
 from typing import Dict
 from typing import ItemsView
 from typing import Iterable
 from typing import Iterator
 from typing import KeysView
 from typing import List
+from typing import Optional
 from typing import Set
 from typing import Tuple
 
@@ -140,7 +142,7 @@ class JsonObj(JsonObjMutableMapping):
 
     """
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Use the object dict"""
         self.__dict__.update(*args, **kwargs)
         try:
@@ -650,7 +652,9 @@ class JsonObj(JsonObjMutableMapping):
         """
         return cls.from_dict(json.loads(json_string))
 
-    def to_json(self, pretty: bool = False, sort_keys: bool = False, **kwargs) -> str:
+    def to_json(
+        self, pretty: bool = False, sort_keys: bool = False, **kwargs: Any
+    ) -> str:
         """Return a JSON string of the JsonObj object
 
         Args:
@@ -665,7 +669,9 @@ class JsonObj(JsonObjMutableMapping):
         """
         return self._to_json(pretty=pretty, sort_keys=sort_keys, **kwargs)
 
-    def stringify(self, pretty: bool = False, sort_keys: bool = False, **kwargs) -> str:
+    def stringify(
+        self, pretty: bool = False, sort_keys: bool = False, **kwargs: Any
+    ) -> str:
         """Return a JSON string of the JsonObj; `JsonObj.to_json` alias
 
         Args:
@@ -679,7 +685,9 @@ class JsonObj(JsonObjMutableMapping):
         """
         return self.to_json(pretty=pretty, sort_keys=sort_keys, **kwargs)
 
-    def _to_json(self, pretty: bool = False, sort_keys: bool = False, **kwargs) -> str:
+    def _to_json(
+        self, pretty: bool = False, sort_keys: bool = False, **kwargs: Any
+    ) -> str:
         """Return a JSON string of the JsonObj object
 
         Args:
@@ -700,7 +708,7 @@ class JsonObj(JsonObjMutableMapping):
         return JsonObj(val)
 
     @classmethod
-    def __get_validators__(cls):
+    def __get_validators__(cls) -> Iterator[Callable[[Any], Any]]:
         """Return the JsonObj validator functions"""
         yield cls.validate_type
 
@@ -753,7 +761,11 @@ class JSON(metaclass=JSONMeta):
 
     @staticmethod
     def stringify(
-        data, pretty: bool = False, sort_keys=False, default=None, **kwargs
+        data: Any,
+        pretty: bool = False,
+        sort_keys: bool = False,
+        default: Optional[Callable[[Any], Any]] = None,
+        **kwargs: Any,
     ) -> str:
         return str(
             json.dumps(
@@ -763,7 +775,11 @@ class JSON(metaclass=JSONMeta):
 
     @staticmethod
     def dumps(
-        data, pretty: bool = False, sort_keys=False, default=None, **kwargs
+        data: Any,
+        pretty: bool = False,
+        sort_keys: bool = False,
+        default: Optional[Callable[[Any], Any]] = None,
+        **kwargs: Any,
     ) -> str:
         return str(
             json.dumps(
@@ -773,7 +789,11 @@ class JSON(metaclass=JSONMeta):
 
     @staticmethod
     def binify(
-        data, pretty: bool = False, sort_keys=False, default=None, **kwargs
+        data: Any,
+        pretty: bool = False,
+        sort_keys: bool = False,
+        default: Optional[Callable[[Any], Any]] = None,
+        **kwargs: Any,
     ) -> bytes:
         return bytes(
             json.dumpb(
@@ -783,7 +803,11 @@ class JSON(metaclass=JSONMeta):
 
     @staticmethod
     def dumpb(
-        data, pretty: bool = False, sort_keys=False, default=None, **kwargs
+        data: Any,
+        pretty: bool = False,
+        sort_keys: bool = False,
+        default: Optional[Callable[[Any], Any]] = None,
+        **kwargs: Any,
     ) -> bytes:
         return bytes(
             json.dumpb(
@@ -792,10 +816,10 @@ class JSON(metaclass=JSONMeta):
         )
 
     @staticmethod
-    def loads(string: str, obj: bool = False, **kwargs) -> Any:
+    def loads(string: str, obj: bool = False, **kwargs: Any) -> Any:
         if obj:
-            return jsonify(json.loads(string))
-        return json.loads(string)
+            return jsonify(json.loads(string, **kwargs))
+        return json.loads(string, **kwargs)
 
     @staticmethod
     def parse(string: str, obj: bool = True) -> Any:
@@ -805,7 +829,7 @@ class JSON(metaclass=JSONMeta):
 
     @staticmethod
     def json_lib() -> Any:
-        return json._json.__name__
+        return json._json.__class__.__name__
 
 
 stringify = JSON.stringify
