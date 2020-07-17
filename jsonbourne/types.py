@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Json Bourne types"""
 import sys
-from typing import Any
-from typing import Dict
-from typing import List
+
+from typing import Any, Dict, List
+
 
 if sys.version_info < (3, 7):
     from collections.abc import MutableMapping

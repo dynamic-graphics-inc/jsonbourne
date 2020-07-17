@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-from typing import Any
-from typing import Callable
-from typing import Optional
+from typing import Any, Callable, Optional
 
 import orjson
 
-from jsonbourne.jsonlib.base import JsonLib
-from jsonbourne.jsonlib.base import _json_encode_default
+from jsonbourne.jsonlib.base import JsonLib, _json_encode_default
+
 
 try:
     import numpy as np
@@ -21,10 +19,14 @@ class ORJSON(JsonLib):
         pretty: bool = False,
         sort_keys: bool = False,
         default: Optional[Callable[[Any], Any]] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> str:
         return ORJSON.dumpb(
-            data, pretty=pretty, sort_keys=sort_keys, default=default, **kwargs
+            data,
+            pretty=pretty,
+            sort_keys=sort_keys,
+            default=default or _json_encode_default,
+            **kwargs,
         ).decode(encoding="utf-8")
 
     @staticmethod
@@ -33,7 +35,7 @@ class ORJSON(JsonLib):
         pretty: bool = False,
         sort_keys: bool = False,
         default: Optional[Callable[[Any], Any]] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> bytes:
         option = 0
         if pretty:

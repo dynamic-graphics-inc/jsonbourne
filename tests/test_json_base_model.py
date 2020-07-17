@@ -2,8 +2,8 @@
 
 import pytest
 
-from jsonbourne import JsonObj
-from jsonbourne import json
+from jsonbourne import JsonObj, json
+
 
 pytestmark = [pytest.mark.pydantic, pytest.mark.optdeps]
 

@@ -2,14 +2,13 @@
 """JSONBourne + Pydantic"""
 
 from pprint import pformat
-from typing import Any
-from typing import Dict
-from typing import Set
+from typing import Any, Dict, Set
 
 from pydantic import BaseModel  # type: ignore
 
 from jsonbourne import json
 from jsonbourne.core import JsonObj
+
 
 __all__ = ['JsonBaseModelDefaultConfig', 'JsonBaseModel']
 

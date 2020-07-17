@@ -2,21 +2,26 @@
 """Json Bourne -- EZ-PZ-JSON with lots o goodies"""
 import keyword
 import sys
+
 from itertools import chain
 from pprint import pformat
-from typing import Any
-from typing import Callable
-from typing import Dict
-from typing import ItemsView
-from typing import Iterable
-from typing import Iterator
-from typing import KeysView
-from typing import List
-from typing import Optional
-from typing import Set
-from typing import Tuple
+from types import ModuleType
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    ItemsView,
+    Iterable,
+    Iterator,
+    KeysView,
+    List,
+    Optional,
+    Set,
+    Tuple,
+)
 
 from jsonbourne import json
+
 
 if sys.version_info < (3, 7):
     from collections.abc import MutableMapping
@@ -832,5 +837,12 @@ class JSON(metaclass=JSONMeta):
         return json._json.__class__.__name__
 
 
+class JSONModuleCls(ModuleType, JSON):
+    @staticmethod
+    def __call__(value: Any):  # type: ignore
+        return jsonify(value)
+
+
 stringify = JSON.stringify
 parse = JSON.parse
+

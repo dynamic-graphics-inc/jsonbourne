@@ -1,8 +1,10 @@
 import datetime
 import pathlib
+
 from decimal import Decimal
 
 import pytest
+
 
 try:
     from jsonbourne.jsonlib._json_stdlib import JSON_STDLIB

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-"""`jsonbourne` finds the best python-json-lib for the job
-
-Dynamic Graphics Python
-"""
+"""JSON callable module ~ jsonbourne"""
+import sys
 from jsonbourne import json
+from jsonbourne.core import JSONModuleCls
 from jsonbourne._import import import_json
 from jsonbourne._version import (
     VERSION_INFO,
@@ -12,20 +11,19 @@ from jsonbourne._version import (
     VERSION_PATCH,
     __version__,
 )
-from jsonbourne.core import (
-    JSON,
-    JsonDict,
-    JsonObj,
-    JsonObjMutableMapping,
-    parse,
-    stringify,
-)
+from jsonbourne.core import JSON, JsonDict, JsonObj, JsonObjMutableMapping
 
 
-JSONLIB = json.__name__
+sys.modules['JSON'].__class__ = JSONModuleCls
+stringify = JSON.stringify
+dumps = JSON.dumps
+binify = JSON.binify
+dumpb = JSON.dumpb
+loads = JSON.loads
+parse = JSON.parse
+json_lib = JSON.json_lib
 
 __all__ = [
-    "JSON",  # js/ts JSON (THE ONE TO USE)
     "json",  # json compat lib
     # core
     "JsonObjMutableMapping",
@@ -35,6 +33,11 @@ __all__ = [
     "import_json",
     # util funks
     "stringify",
+    "binify",
+    "dumps",
+    "dumpb",
+    "loads",
+    "json_lib",
     "parse",
     # Version stuff
     "VERSION_MAJOR",

@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-from abc import ABC
-from abc import abstractmethod
-from datetime import datetime
-from datetime import timedelta
+from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
-from typing import Any
-from typing import Callable
-from typing import Optional
+from typing import Any, Callable, Optional
+
 
 try:
     import numpy as np
@@ -23,7 +20,7 @@ class JsonLib(ABC):
         pretty: bool = False,
         sort_keys: bool = False,
         default: Optional[Callable[[Any], Any]] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> str:
         ...
 
@@ -34,7 +31,7 @@ class JsonLib(ABC):
         pretty: bool = False,
         sort_keys: bool = False,
         default: Optional[Callable[[Any], Any]] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> bytes:
         ...
 
