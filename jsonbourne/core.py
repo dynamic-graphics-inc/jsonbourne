@@ -845,4 +845,3 @@ class JSONModuleCls(ModuleType, JSON):
 
 stringify = JSON.stringify
 parse = JSON.parse
-
